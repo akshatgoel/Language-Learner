@@ -1,4 +1,5 @@
 <?php
+error_reporting(E^ALL);
 require_once('lib/library.php');
 var_dump(word_of_day('spanish'));
 var_dump(word_of_day('french'));
