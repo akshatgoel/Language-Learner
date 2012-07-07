@@ -12,7 +12,7 @@ require_once('../lib/library.php');
 			</a>
 		</p>
 		<p class="pb10" >Current Language : <?php echo ucwords($_SESSION['user']['user_language']); ?><br />
-					Default Language : <select id="change_default" > 
+					Default Language : <select id="change_default" style="float:none;"> 
 						<?php $langs = get_languages(); 
 							foreach($langs as $lang){
 								if(strcmp($lang, $_SESSION['user']['default_language']) == 0)
