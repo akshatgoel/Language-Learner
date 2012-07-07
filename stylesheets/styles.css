@@ -93,3 +93,5 @@ body{background: url(../images/5.jpg) #082352;background-attachment:fixed;font-f
 	border-top-right-radius: 5px;
 	padding: 5px 13px;
 }
+
+.learn_btn{float: right; cursor: pointer; border-radius: 5px 5px 5px 5px; background: none repeat scroll 0% 0% rgb(239, 239, 254); color: rgb(34, 34, 34); font-size: 14px; padding: 4px 15px; margin-top: -2px;}

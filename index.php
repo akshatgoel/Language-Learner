@@ -191,7 +191,7 @@ $app_name = idx($app_info, 'name', '');
 			</div>
 			<div class="fr scroll-pane" id="right_content">
 				<div class="box">
-					<h3>July 1, 2012 <span style="float:right;padding-right: 5px;">Learn</span></h3>
+					<h3>July 1, 2012 <span class="learn_btn">Learn</span></h3>
 					<div>
 						<h4>mumpsimus</h4>
 						<em class="s13 mt7">Adherence to or persistence in an erroneous use of language, memorization, practice, belief, etc., out of habit or obstinacy. </em>
@@ -199,7 +199,7 @@ $app_name = idx($app_info, 'name', '');
 					</div>
 				</div>
 				<div class="box">
-					<h3>July 1, 2012<span style="float:right;padding-right: 5px;">Learn</span></h3>
+					<h3>July 1, 2012<span class="learn_btn">Learn</span></h3>
 					<div>
 						<h4>mumpsimus</h4>
 						<em class="s13 mt7">I profess, my good lady," replied I, "that had any one but you made such a declaration, I should have thought it as capricious as that of the clergyman, who, without vindicating his false reading, preferred, from habit's sake, his old Mumpsimus..I profess, my good lady," replied I, "that had any one but you made such a declaration, I should have thought it as capricious as that of the clergyman, who, without vindicating his false reading, preferred, from habit's sake, his old Mumpsimus.. </em>
@@ -207,7 +207,7 @@ $app_name = idx($app_info, 'name', '');
 					</div>
 				</div>
 				<div class="box">
-					<h3>July 1, 2012<span style="float:right;padding-right: 5px;">Learn</span></h3>
+					<h3>July 1, 2012<span class="learn_btn">Learn</span></h3>
 					<div>
 						<h4>mumpsimus</h4>
 						<em class="s13 mt7">I profess, my good lady," replied I, "that had any one but you made such a declaration, I should have thought it as capricious as that of the clergyman, who, without vindicating his false reading, preferred, from habit's sake, his old Mumpsimus.. </em>
@@ -215,7 +215,7 @@ $app_name = idx($app_info, 'name', '');
 					</div>
 				</div>
 				<div class="box">
-					<h3>July 1, 2012<span style="float:right;padding-right: 5px;">Learn</span></h3>
+					<h3>July 1, 2012<span class="learn_btn">Learn</span></h3>
 					<div>
 						<h4>mumpsimus</h4>
 						<em class="s13 mt7">Adherence to or persistence in an erroneous use of language, memorization, practice, belief, etc., out of habit or obstinacy. </em>
