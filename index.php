@@ -102,36 +102,46 @@ $app_name = idx($app_info, 'name', '');
     <script type="text/javascript" src="/javascript/jquery-1.7.1.min.js"></script>
 	
   <script type="text/javascript" src="/javascript/jquery.masonry.js" ></script>
-		<script type="text/javascript">
-			$(document).ready(function(){
+  <script type="text/javascript" src="/javascript/jquery.simplemodal.1.4.2.min.js" ></script>
+  <script type="text/javascript">
+	$(document).ready(function(){
+	
+		var inpVal = '';
+		
+		$('#right_content').masonry({
+		  itemSelector: '.box',
+		  animate:true
+		});
+		
+		$(window).bind("resize", function(){ $('#right_content').masonry().reload(); });
+		
+		$('.text_box').focus(function(){
+		
+			inpVal = $(this).val();
+			$(this).val('');
+			$(this).removeClass('em');
+		
+		});
+		$('.text_box').blur(function(){
+		
+			if($(this).val() == ''){
+				$(this).val(inpVal);
+				$(this).addClass('em');
+			}
+		
+		});
+		
+		$('#change_language_btn').click(function(){
 			
-				var inpVal = '';
-				
-				$('#right_content').masonry({
-				  itemSelector: '.box',
-				  animate:true
-				});
-				
-				$(window).bind("resize", function(){ $('#right_content').masonry().reload(); });
-				
-				$('.text_box').focus(function(){
-				
-					inpVal = $(this).val();
-					$(this).val('');
-					$(this).removeClass('em');
-				
-				});
-				$('.text_box').blur(function(){
-				
-					if($(this).val() == ''){
-						$(this).val(inpVal);
-						$(this).addClass('em');
-					}
-				
-				});
-				
+			$.get('ajax/language.php', function(data) {
+				  $.modal(data);
+				 // alert('Load was performed.');
 			});
-		</script>
+		
+		});
+		
+	});
+    </script>
     <script type="text/javascript">
       function logResponse(response) {
         if (console && console.log) {
@@ -235,7 +245,7 @@ $app_name = idx($app_info, 'name', '');
     </script>
 		<div id="wrapper" >
 			<div id="top_bar">
-				<a href="#" style="text-decoration:none;"><span class="link" style="padding: 20px;">Change Language </span></a>
+				<a href="javascript:void(0);" style="text-decoration:none;" id="change_language_btn"><span class="link" style="padding: 20px;">Change Language </span></a>
 				<input type="text" value="Search word" name="search" class="em text_box">
 			</div>
 			<div class="fl" id="left_menu">
