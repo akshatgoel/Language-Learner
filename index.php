@@ -215,12 +215,12 @@ $app_name = idx($app_info, 'name', '');
 				<?php for($i=0;$i<8;$i++){ ?>
 				<?php $today = word_of_day_old($_SESSION['user']['user_language'], $i); ?>
 				<div class="box">
-					<h3> <?php echo date('j F Y',strtotime($today['used'])); ?><span class="learn_btn" id="word<?php echo $today['id']; ?>"><?php
+					<h3> <?php echo date('j F Y',strtotime($today['used'])); ?><?php
 					switch(is_learnt($today['id'],$_SESSION['user']['user_language'], $_SESSION['user']['id'])){
-						case 1 : echo 'Learnt';
+						case 1 : echo '<span class="unlearn_btn" id="word'.$today['id'].'">Unlearn';
 									break;
 						case 0 : 
-						default: echo 'Learn';
+						default: echo '<span class="learn_btn" id="word'.$today['id'].'">Learn';
 									break;
 					}
 					?></span></h3>

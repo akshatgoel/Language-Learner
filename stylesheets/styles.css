@@ -95,7 +95,7 @@ body{background: url(../images/5.jpg) #082352 no-repeat;background-attachment:fi
 	padding: 5px 13px;
 }
 
-.learn_btn{float: right; cursor: pointer; border-radius: 5px 5px 5px 5px; background: none repeat scroll 0% 0% rgb(239, 239, 254); color: rgb(34, 34, 34); font-size: 14px; padding: 4px 15px; margin-top: -2px;}
+.learn_btn, .unlearn_btn{float: right; cursor: pointer; border-radius: 5px 5px 5px 5px; background: none repeat scroll 0% 0% rgb(239, 239, 254); color: rgb(34, 34, 34); font-size: 14px; padding: 4px 15px; margin-top: -2px;}
 .popup{padding:20px;border-radius:14px;background:rgba(15,15,15,0.6);color: #fff;z-index:20;position:absolute;top:20%;left:20%;border: 3px inset #fff;display:none;}
 
 

@@ -317,6 +317,17 @@
 	$query = "insert ignore into history(user_id, word_id, lang) values($user_id, $word_id, '$lang')";
 	$result = mysql_query($query);
   }
+  function unlearn_word($word_id, $lang, $user_id){
+	$db=db_connect();
+    if($db!=0){
+      return $db;
+    }
+	$word_id = mysql_real_escape_string($word_id);
+	$lang = mysql_real_escape_string($lang);
+	$user_id = mysql_real_escape_string($user_id);
+	$query = "delete from history where user_id = $user_id and word_id = $word_id and lang = '$lang'";
+	$result = mysql_query($query);
+  }
   function is_learnt($word_id, $lang, $user_id){
 	$db=db_connect();
     if($db!=0){
@@ -354,12 +365,21 @@
 		return 1;
 	}
 	
-	function learnt_word_beacon($user_id,$word_id,$lang){
+	function learnt_word_beacon($word_id, $lang, $user_id){
 		$db=db_connect();
 		if($db!=0){
 		  return $db;
 		}
 		$query = "insert into beacon(user_id, activity) values($user_id,'Learnt:".$word_id."::".$lang."')";
+		$result = mysql_query($query);
+		return 1;
+	}
+	function unlearnt_word_beacon($word_id, $lang, $user_id){
+		$db=db_connect();
+		if($db!=0){
+		  return $db;
+		}
+		$query = "insert into beacon(user_id, activity) values($user_id,'Unlearnt:".$word_id."::".$lang."')";
 		$result = mysql_query($query);
 		return 1;
 	}

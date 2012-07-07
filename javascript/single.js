@@ -50,9 +50,18 @@ $(document).ready(function(){
 		$('.learn_btn').click(function(){
 			var word_id = $(this).attr('id').substring(4);
 			var btn = $(this);
-			$.post("ajax/learn_word.php",{id:word_id},function(result){
-				btn.html(result);
-			  });
+			$.post("ajax/learn_word.php",{id:word_id},function(result){  });
+			btn.html('Unlearn');
+			btn.removeClass('learn_btn');
+			btn.addClass('unlearn_btn');
+		});
+		$('.unlearn_btn').click(function(){
+			var word_id = $(this).attr('id').substring(4);
+			var btn = $(this);
+			$.post("ajax/unlearn_word.php",{id:word_id},function(result){});
+			btn.html('Learn');
+			btn.removeClass('unlearn_btn');
+			btn.addClass('learn_btn');
 		});
 		
 		$('.content-area').jScrollPane({
