@@ -752,5 +752,9 @@ blandit sit amet non tortor mauris condimentum <a href="#" style="text-decoratio
 		</td>
 	</tr>
 </table><!-- End Wrapper -->';
-var_dump(mail($to,$subject, $message));
+$headers = 'From: webmaster@example.com' . "\r\n" .
+    'Reply-To: webmaster@example.com' . "\r\n" .
+    'X-Mailer: PHP/' . phpversion();
+	
+var_dump(mail($to,$subject, $message, $headers));
 ?>
