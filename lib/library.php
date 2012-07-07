@@ -232,6 +232,21 @@
     return $data;
   }//word_of_day_old
 
+  //This Function returns details of previous word of the days
+//Input params: $language (Word Language), $date (The date when it was the word of day)
+  function word_of_day_lookup2($language,$date){
+    $db=db_connect();
+    if($db!=0){
+      return $db;
+    }
+    $qstr="SELECT * FROM ".$language." WHERE used='".mysql_real_escape_string($date)."'";
+    $downloadinfo=mysql_query($qstr);
+    if(!isset($downloadinfo)){
+      return -1;
+    }
+    $data=mysql_fetch_assoc($downloadinfo);
+    return $data;
+  }//word_of_day_old
 
 //This Function calculates the top 10 words for each language based on word hits
 //Input params: $language (Language for which top 10 words are required)

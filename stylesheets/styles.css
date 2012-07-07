@@ -4,7 +4,7 @@ body{background: url(../images/5.jpg) #082352 no-repeat;background-attachment:fi
 	height:70px;
 	margin-top: 10px;
 }
-	#top_bar input{
+	input, select{
 		font-family: 'Give You Glory';
 		text-shadow: 0px 0px 3px #efefef;
 		border-radius: 4px;

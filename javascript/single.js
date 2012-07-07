@@ -91,9 +91,16 @@ $(document).ready(function(){
 		$('#notify_link').live('click',function(){
 			var btn = $(this);
 			$('#overlay').show();
-			$.get("actions/update_notify.php",function(result){
+			$.get("actions/update_notify.php?rnd="+Math.random(),function(result){
 				$('#overlay').hide();
-				btn.html(result);});
+				if(result == "1"){
+					switch(btn.html()){
+						case 'No' : btn.html('Yes');
+									break;
+						case 'Yes' : btn.html('No');
+									break;
+					}
+				}});
 		});
 		
 		$('.lesson_link').live('click',function(){
@@ -114,12 +121,24 @@ $(document).ready(function(){
 			});
 		});
 		$('#change_default').live('change',function(){
+			$('#overlay').show();
 			var langg = $('#change_default option:selected').val();
 			if( langg != $('#user_def_lang').val()){
 				$.post('actions/up_def_lang.php',{lang: langg}, function(data) {
 					$('#user_def_lang').val(langg);
+					$('#overlay').hide();
 				});
 			}
 		});
+		$('#date_selector').datepick({dateFormat: 'yyyy-mm-dd', minDate: new Date(2012, 6, 30)});
+		$('#date_selector').live('change',getword);
+		function getword(){
+			$('#overlay').show();
+			var date = $('#date_selector').val();
+			$.post('actions/get_word.php',{day: date}, function(data) {
+					$('#my_word').html(data);
+					$('#overlay').hide();
+			});
+		}
 
 	});

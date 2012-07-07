@@ -86,6 +86,7 @@ $app_name = idx($app_info, 'name', '');
     <title><?php echo he($app_name); ?></title>
 	<link rel="stylesheet" href="stylesheets/styles.css" media="Screen" type="text/css" />
 	<link rel="stylesheet" href="stylesheets/jquery.jscrollpane.css" media="Screen" type="text/css" />
+	<link rel="stylesheet" href="stylesheets/jquery.datepick.css" media="Screen" type="text/css" />
 
     <!-- These are Open Graph tags.  They add meta data to your  -->
     <!-- site that facebook uses when your content is shared     -->
@@ -110,6 +111,7 @@ $app_name = idx($app_info, 'name', '');
 
 	<!-- the jScrollPane script -->
 	<script type="text/javascript" src="/javascript/jquery.jscrollpane.min.js"></script>
+	<script type="text/javascript" src="/javascript/jquery.datepick.min.js"></script>
     <!--[if IE]>
       <script type="text/javascript">
         var tags = ['header', 'section'];
@@ -186,10 +188,10 @@ $app_name = idx($app_info, 'name', '');
 <br />
 				<ul>
 					<li>
-						<a href="#"><span class="link" > Home </span></a>
+						<a href="javascript:void(0);" title="homepage" class="ajax_link"><span class="link" > Home </span></a>
 					</li>
 					<li>
-						<a href="#"><span class="link" > Word of the day </span></a>
+						<a href="javascript:void(0);" title="word_of_the_day" class="ajax_link"><span class="link" > Word of the day </span></a>
 					</li>
 					<li>
 						<a href="javascript:void(0);" title="browse_lessons" class="ajax_link"><span class="link" > Browse Lessons </span></a>
@@ -202,9 +204,6 @@ $app_name = idx($app_info, 'name', '');
 					</li>
 					<li>
 						<a href="#"><span class="link" > Take Test </span></a>
-					</li>
-					<li>
-						<a href="#"><span class="link" > Revise words </span></a>
 					</li>
 					<li>
 						<a href="javascript:void(0);" title="dashboard" class="ajax_link"><span class="link" > Dashboard </span></a>
@@ -237,7 +236,6 @@ $app_name = idx($app_info, 'name', '');
 					</div>
 				</div>
 				<?php } ?>
-				
 			</div>
 		</div>
 	</body>
