@@ -1,5 +1,6 @@
 <?php
 session_start();
+header('Content-type: text/html;charset=utf-8');
 // Provides access to app specific values such as your app id and app secret.
 // Defined in 'AppInfo.php'
 

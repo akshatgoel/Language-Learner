@@ -81,6 +81,7 @@ $(document).ready(function(){
 			var lesson = $(this).attr('title');
 			$.post("ajax/load_lesson.php",{lessonName: lesson},function(result){
 				$('#right_content').html(result);
+				$('#right_content').masonry().reload();
 			});
 		});
 
