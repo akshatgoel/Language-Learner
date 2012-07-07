@@ -250,6 +250,12 @@ $app_name = idx($app_info, 'name', '');
 						<a href="#"><span class="link" > Word of the day </span></a>
 					</li>
 					<li>
+						<a href="#"><span class="link" > Browse Lessons </span></a>
+					</li>
+					<li>
+						<a href="#"><span class="link" > Top 10 words </span></a>
+					</li>
+					<li>
 						<a href="#"><span class="link" > Take Test </span></a>
 					</li>
 					<li>
@@ -259,6 +265,9 @@ $app_name = idx($app_info, 'name', '');
 						<a href="#"><span class="link" > Dashboard </span></a>
 					</li>
 					
+					<li>
+						<a href="#"><span class="link" > Help </span></a>
+					</li>
 				</ul>
 									
 					 
