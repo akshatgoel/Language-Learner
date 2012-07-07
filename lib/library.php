@@ -349,7 +349,68 @@
     $current_rep=$row['rep'];
     $new_rep=$current_rep+$points;
     return $new_rep;
-  }
+  }//rep_adder
+
+
+//This function lists all the words that a user have learnt in a given language
+//Input Params: $id(User's primary id), $language (user's language)
+  function browse_words($id,$language,$flag){
+    $db=db_connect();
+    if($db!=0){
+      return $db;
+    }
+    $qstr="SELECT word_id FROM history WHERE user_id='$id' AND lang='$language' AND flag='$flag'";
+    $query=mysql_query($qstr);
+    $num_words=mysql_num_rows($query);
+    if($num_words==0){
+      return "No Words Found";
+    }
+    $id_list=array();
+    while($word_id = mysql_fetch_assoc($query)){
+      $id_list[] = $word_id['word_id'];
+      }
+      //return $id_list;
+      $number=count($id_list);
+      foreach($id_list as $u){
+        $getwords="SELECT word,translation,lesson_name FROM ".$language." WHERE id='$u'";
+        $runquery=mysql_query($getwords);
+        $words = array();
+        while($word = mysql_fetch_array($runquery)){
+          $words[] = $word;
+	}
+	//return $words;
+	for($i=0;$i<$number;$i++){
+          $arr[$i]=$words;
+        }
+      }
+      return $arr;
+  }//browse_words
+
+
+//This function changes the default language of the user
+//Input params: $id ($user id), $lang(The new default languge)
+  function change_default_lang($id,$lang){
+    $db=db_connect();
+    if($db!=0){
+      return $db;
+    }
+    $query=mysql_query("SELECT default_language FROM users WHERE id='$id'");
+    if(!isset($query)){
+      return "Failed to get previous defualt language";
+    }
+    $row=mysql_fetch_assoc($query);
+    $oldlang=$row['default_language'];
+    if($lang==$oldlang){
+      return "This is already your default language";
+    }
+    $update_lang=mysql_query("UPDATE users SET default_language='$lang' WHERE id='$id'");
+    if(!isset($update_lang)){
+      return "Failed to update language";
+    }
+    return "Default Language Changed Successfully";
+
+  }//change_default_lang
+
 
 
   /* ************************************
