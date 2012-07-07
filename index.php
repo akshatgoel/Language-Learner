@@ -55,17 +55,15 @@ if ($me){
 	$access = $facebook->getAccesstoken();
 	$name = $me['name'];
 	$email = $me['email'];
-	if(get_user($fb_id) == -1){
+	if(($app_user = get_user($fb_id)) == -1){
 		$_SESSION['user']['id'] = add_user($fb_id, $access, $name, $email);
-		if(empty($_SESSION['user']['user_language'])) $_SESSION['user']['user_language'] = $_SESSION['user']['default_language'];
+		$_SESSION['user']['user_language'] = 'spanish';
 		added_user_beacon($_SESSION['user']['id']);
 	}
 	else{
 		update_user($fb_id, $access, $name, $email);
-		
 		if(empty($_SESSION['user']['user_language'])){
-		$_SESSION['user']['user_language'] = $_SESSION['user']['default_language'];
-		
+			$_SESSION['user']['user_language'] = $app_user['default_language'];
 		}
 	}
 }
