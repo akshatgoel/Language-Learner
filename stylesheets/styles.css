@@ -95,7 +95,9 @@ body{background: url(../images/5.jpg) #082352 no-repeat;background-attachment:fi
 	padding: 5px 13px;
 }
 
-.learn_btn, .unlearn_btn{float: right; cursor: pointer; border-radius: 5px 5px 5px 5px; background: none repeat scroll 0% 0% rgb(239, 239, 254); color: rgb(34, 34, 34); font-size: 14px; padding: 4px 15px; margin-top: -2px;}
+.box a{text-decoration:none;border-radius:5px;padding:5px 10px;background: rgba(59, 89, 152, 0.7);box-shadow:3px 0 3px #efefef;color:#fff;}
+
+.fb_btn,.learn_btn, .unlearn_btn{float: right; cursor: pointer; border-radius: 5px; background: rgba(59, 89, 152, 0.7); color: #fff; font-size: 14px; padding: 4px 15px; margin-top: -5px;}
 .popup{padding:20px;border-radius:14px;background:rgba(15,15,15,0.6);color: #fff;z-index:20;position:absolute;top:20%;left:20%;border: 3px inset #fff;display:none;}
 
 

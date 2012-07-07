@@ -173,7 +173,7 @@ $app_name = idx($app_info, 'name', '');
 	</div>
 		<div id="wrapper" >
 			<div id="top_bar">
-				<a href="javascript:void(0);" style="text-decoration:none;" id="change_language_btn"><span class="link" style="padding: 20px;">Change Language </span></a>
+				<a href="javascript:void(0);" style="text-decoration:none;" id="change_language_btn"><span class="link" style="padding: 20px;">Change Language (<?php echo ucwords($_SESSION['user']['user_language']); ?>) </span></a>
 				<form method="post" action="actions/search.php" id="search_form" style="margin-top:-15px;">
 					<input type="submit" value="search" style="width: 100px;margin-right: 14%;cursor:pointer;margin-left:7px;padding-top:7px;padding-bottom:9px;">
 					<input type="text" value="Search word" name="search" class="em text_box">
@@ -194,6 +194,9 @@ $app_name = idx($app_info, 'name', '');
 						<a href="javascript:void(0);" title="browse_lessons" class="ajax_link"><span class="link" > Browse Lessons </span></a>
 					</li>
 					<li>
+						<a href="javascript:void(0);" title="browse_my_words" class="ajax_link"><span class="link" > Browse My Words </span></a>
+					</li>
+					<li>
 						<a href="javascript:void(0);" title="top_words" class="ajax_link"><span class="link" > Top 10 words </span></a>
 					</li>
 					<li>
@@ -203,7 +206,7 @@ $app_name = idx($app_info, 'name', '');
 						<a href="#"><span class="link" > Revise words </span></a>
 					</li>
 					<li>
-						<a href="#"><span class="link" > Dashboard </span></a>
+						<a href="javascript:void(0);" title="dashboard" class="ajax_link"><span class="link" > Dashboard </span></a>
 					</li>
 					
 					<li>
@@ -217,7 +220,11 @@ $app_name = idx($app_info, 'name', '');
 				<?php for($i=0;$i<8;$i++){ ?>
 				<?php $today = word_of_day_lookup($_SESSION['user']['user_language'], $i); ?>
 				<div class="box">
-					<h3> <?php echo date('j F Y',strtotime($today['used'])); ?><?php
+					<h3> <?php echo date('j F Y',strtotime($today['used'])); ?></h3>
+					<div>
+						<h4><?php echo $today['word']; ?></h4>
+						<em class="s13 mt7"><?php echo $today['translation']; ?></em>
+						<p class="s11 mt10"><a href="javascript:void(0);" title="<?php echo $today['lesson_name']; ?>" class="lesson_link"><?php echo $today['lesson_name']; ?></a><?php
 					switch(is_learnt($today['id'],$_SESSION['user']['user_language'], $_SESSION['user']['id'])){
 						case 1 : echo '<span class="unlearn_btn" id="word'.$today['id'].'">Unlearn';
 									break;
@@ -225,11 +232,7 @@ $app_name = idx($app_info, 'name', '');
 						default: echo '<span class="learn_btn" id="word'.$today['id'].'">Learn';
 									break;
 					}
-					?></span></h3>
-					<div>
-						<h4><?php echo $today['word']; ?></h4>
-						<em class="s13 mt7"><?php echo $today['translation']; ?></em>
-						<p class="s11 mt10"><a href="javascript:void(0);" title="<?php echo $today['lesson_name']; ?>" class="lesson_link"><?php echo $today['lesson_name']; ?></a></p>
+					?></span></p>
 					</div>
 				</div>
 				<?php } ?>

@@ -37,34 +37,39 @@ $(document).ready(function(){
 					$('#language_change').show();
 			});
 			$(window).bind('click', function(){
-				if(is_in_popup == false){ $('#language_change').hide(); }
+				if(is_in_popup == false){ $('#language_change').hide(); $(window).unbind('click'); }
 			});
 		});
 		
 		$('#help_btn').click(function(){
+		alert('g');
 			$('.popup').hide();
 			$('#help_div').show();
 			$(window).bind('click', function(){
-				if(is_in_popup == false){ $('#help_div').hide(); }
+				if(is_in_popup == false){ $('#help_div').hide(); $(window).unbind('click'); }
 			});
 		});
 		
-		$('.learn_btn').click(function(){
+		$('.learn_btn').live('click',function(){
 			var word_id = $(this).attr('id').substring(4);
 			var btn = $(this);
 			$('#overlay').show();
-			$.post("ajax/learn_word.php",{id:word_id},function(result){  
+			var rand = Math.random();
+			$.get("ajax/learn_word.php?id="+word_id+"&rand="+rand,function(result){  
+			$.get("ajax/learn_word_beacon.php?id="+word_id+"&rand="+rand,function(result){});
 			$('#overlay').hide();});
 			btn.html('Unlearn');
 			btn.removeClass('learn_btn');
 			btn.addClass('unlearn_btn');
 		});
-		$('.unlearn_btn').click(function(){
+		$('.unlearn_btn').live('click',function(){
 			var word_id = $(this).attr('id').substring(4);
 			var btn = $(this);
 			$('#overlay').show();
-			$.post("ajax/unlearn_word.php",{id:word_id},function(result){
+			var rand = Math.random();
+			$.get("ajax/unlearn_word.php?id="+word_id+"&rand="+rand,function(result){
 			$('#overlay').hide();});
+			$.get("ajax/unlearn_word_beacon.php?id="+word_id+"&rand="+rand,function(result){});
 			btn.html('Learn');
 			btn.removeClass('unlearn_btn');
 			btn.addClass('learn_btn');
@@ -83,7 +88,13 @@ $(document).ready(function(){
 			$('.jspDrag').stop(true, true).fadeOut('slow');
 		});
 		
-		
+		$('#notify_link').live('click',function(){
+			var btn = $(this);
+			$('#overlay').show();
+			$.get("actions/update_notify.php",function(result){
+				$('#overlay').hide();
+				btn.html(result);});
+		});
 		
 		$('.lesson_link').live('click',function(){
 			var lesson = $(this).attr('title');

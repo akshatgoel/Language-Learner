@@ -36,11 +36,11 @@
           );
         });
 
-        $('#sendRequest').click(function() {
+        $('#sendRequest').live('click',function() {
           FB.ui(
             {
               method  : 'apprequests',
-              message : $(this).attr('data-message')
+              message : 'Learn a New language with me!'
             },
             function (response) {
               // If response is null the user canceled the dialog

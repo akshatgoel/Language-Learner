@@ -114,17 +114,27 @@
       }
     }  //mail_notify
 
-
+	function toggle_mail_notify($id){
+    
+      $db=db_connect();
+      if($db==0){
+            $change_mail_notify=mysql_query("UPDATE users SET notifications=!notifications WHERE id='$id'");
+			return 1;
+        }
+        else{
+          return "Error Executing get_mail_status query";
+        }
+    }  //toggle_mail_notify
 
 //This Function converts the mail status from 0's and 1's to human readable On and Off switches.
 //Input Params $id (User's Primary ID)
   function show_mail_status($id){
     $current=get_mail_status($id);
     if($current==0){
-      return "Off";
+      return "No";
     }
     else if($current==1){
-      return "On";
+      return "Yes";
     }
   } //show_mail_status
 
@@ -327,6 +337,7 @@
       return $db;
     }
     $qword="SELECT id,word,translation, hits FROM ".$language." WHERE lesson_name='$lesson'";
+	//echo $qword;
     $result=mysql_query($qword);
 	$words = array();
     while($word = mysql_fetch_array($result)){
