@@ -86,6 +86,7 @@ $app_name = idx($app_info, 'name', '');
     <title><?php echo he($app_name); ?></title>
     <link rel="stylesheet" href="stylesheets/screen.css" media="Screen" type="text/css" />
     <link rel="stylesheet" href="stylesheets/mobile.css" media="handheld, only screen and (max-width: 480px), only screen and (max-device-width: 480px)" type="text/css" />
+	<link rel="stylesheet" href="stylesheets/styles.css" media="Screen" type="text/css" />
 
     <!--[if IEMobile]>
     <link rel="stylesheet" href="mobile.css" media="screen" type="text/css"  />
@@ -170,6 +171,39 @@ $app_name = idx($app_info, 'name', '');
       </script>
     <![endif]-->
   </head>
+  
+  <script src="jquery.masonry.js" ></script>
+		<script>
+			$(document).ready(function(){
+			
+				var inpVal = '';
+				
+				$('#right_content').masonry({
+				  itemSelector: '.box',
+				  animate:true
+				});
+				
+				$(window).bind("resize", function(){ $('#right_content').masonry().reload(); });
+				
+				$('.text_box').focus(function(){
+				
+					inpVal = $(this).val();
+					$(this).val('');
+					$(this).removeClass('em');
+				
+				});
+				$('.text_box').blur(function(){
+				
+					if($(this).val() == ''){
+						$(this).val(inpVal);
+						$(this).addClass('em');
+					}
+				
+				});
+				
+			});
+		</script>
+		
   <body>
     <div id="fb-root"></div>
     <script type="text/javascript">
@@ -205,178 +239,78 @@ $app_name = idx($app_info, 'name', '');
         fjs.parentNode.insertBefore(js, fjs);
       }(document, 'script', 'facebook-jssdk'));
     </script>
-
-    <header class="clearfix">
-      <?php if (isset($basic)) { ?>
-      <p id="picture" style="background-image: url(https://graph.facebook.com/<?php echo he($user_id); ?>/picture?type=normal)"></p>
-
-      <div>
-        <h1>Welcome, <strong><?php echo he(idx($basic, 'name')); ?></strong></h1>
-        <p class="tagline">
-          This is your app
-          <a href="<?php echo he(idx($app_info, 'link'));?>" target="_top"><?php echo he($app_name); ?></a>
-        </p>
-
-        <div id="share-app">
-          <p>Share your app:</p>
-          <ul>
-            <li>
-              <a href="#" class="facebook-button" id="postToWall" data-url="<?php echo AppInfo::getUrl(); ?>">
-                <span class="plus">Post to Wall</span>
-              </a>
-            </li>
-            <li>
-              <a href="#" class="facebook-button speech-bubble" id="sendToFriends" data-url="<?php echo AppInfo::getUrl(); ?>">
-                <span class="speech-bubble">Send Message</span>
-              </a>
-            </li>
-            <li>
-              <a href="#" class="facebook-button apprequests" id="sendRequest" data-message="Test this awesome app">
-                <span class="apprequests">Send Requests</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <?php } else { ?>
-      <div>
-        <h1>Welcome</h1>
-        <div class="fb-login-button" data-scope="user_likes,user_photos"></div>
-      </div>
-      <?php } ?>
-    </header>
-
-    <section id="get-started">
-      <p>Welcome to your Facebook app, running on <span>heroku</span>!</p>
-      <a href="https://devcenter.heroku.com/articles/facebook" target="_top" class="button">Learn How to Edit This App</a>
-    </section>
-
-    <?php
-      if ($user_id) {
-    ?>
-
-    <section id="samples" class="clearfix">
-      <h1>Examples of the Facebook Graph API</h1>
-
-      <div class="list">
-        <h3>A few of your friends</h3>
-        <ul class="friends">
-          <?php
-            foreach ($friends as $friend) {
-              // Extract the pieces of info we need from the requests above
-              $id = idx($friend, 'id');
-              $name = idx($friend, 'name');
-          ?>
-          <li>
-            <a href="https://www.facebook.com/<?php echo he($id); ?>" target="_top">
-              <img src="https://graph.facebook.com/<?php echo he($id) ?>/picture?type=square" alt="<?php echo he($name); ?>">
-              <?php echo he($name); ?>
-            </a>
-          </li>
-          <?php
-            }
-          ?>
-        </ul>
-      </div>
-
-      <div class="list inline">
-        <h3>Recent photos</h3>
-        <ul class="photos">
-          <?php
-            $i = 0;
-            foreach ($photos as $photo) {
-              // Extract the pieces of info we need from the requests above
-              $id = idx($photo, 'id');
-              $picture = idx($photo, 'picture');
-              $link = idx($photo, 'link');
-
-              $class = ($i++ % 4 === 0) ? 'first-column' : '';
-          ?>
-          <li style="background-image: url(<?php echo he($picture); ?>);" class="<?php echo $class; ?>">
-            <a href="<?php echo he($link); ?>" target="_top"></a>
-          </li>
-          <?php
-            }
-          ?>
-        </ul>
-      </div>
-
-      <div class="list">
-        <h3>Things you like</h3>
-        <ul class="things">
-          <?php
-            foreach ($likes as $like) {
-              // Extract the pieces of info we need from the requests above
-              $id = idx($like, 'id');
-              $item = idx($like, 'name');
-
-              // This display's the object that the user liked as a link to
-              // that object's page.
-          ?>
-          <li>
-            <a href="https://www.facebook.com/<?php echo he($id); ?>" target="_top">
-              <img src="https://graph.facebook.com/<?php echo he($id) ?>/picture?type=square" alt="<?php echo he($item); ?>">
-              <?php echo he($item); ?>
-            </a>
-          </li>
-          <?php
-            }
-          ?>
-        </ul>
-      </div>
-
-      <div class="list">
-        <h3>Friends using this app</h3>
-        <ul class="friends">
-          <?php
-            foreach ($app_using_friends as $auf) {
-              // Extract the pieces of info we need from the requests above
-              $id = idx($auf, 'uid');
-              $name = idx($auf, 'name');
-          ?>
-          <li>
-            <a href="https://www.facebook.com/<?php echo he($id); ?>" target="_top">
-              <img src="https://graph.facebook.com/<?php echo he($id) ?>/picture?type=square" alt="<?php echo he($name); ?>">
-              <?php echo he($name); ?>
-            </a>
-          </li>
-          <?php
-            }
-          ?>
-        </ul>
-      </div>
-    </section>
-
-    <?php
-      }
-    ?>
-
-    <section id="guides" class="clearfix">
-      <h1>Learn More About Heroku &amp; Facebook Apps</h1>
-      <ul>
-        <li>
-          <a href="https://www.heroku.com/?utm_source=facebook&utm_medium=app&utm_campaign=fb_integration" target="_top" class="icon heroku">Heroku</a>
-          <p>Learn more about <a href="https://www.heroku.com/?utm_source=facebook&utm_medium=app&utm_campaign=fb_integration" target="_top">Heroku</a>, or read developer docs in the Heroku <a href="https://devcenter.heroku.com/" target="_top">Dev Center</a>.</p>
-        </li>
-        <li>
-          <a href="https://developers.facebook.com/docs/guides/web/" target="_top" class="icon websites">Websites</a>
-          <p>
-            Drive growth and engagement on your site with
-            Facebook Login and Social Plugins.
-          </p>
-        </li>
-        <li>
-          <a href="https://developers.facebook.com/docs/guides/mobile/" target="_top" class="icon mobile-apps">Mobile Apps</a>
-          <p>
-            Integrate with our core experience by building apps
-            that operate within Facebook.
-          </p>
-        </li>
-        <li>
-          <a href="https://developers.facebook.com/docs/guides/canvas/" target="_top" class="icon apps-on-facebook">Apps on Facebook</a>
-          <p>Let users find and connect to their friends in mobile apps and games.</p>
-        </li>
-      </ul>
-    </section>
-  </body>
+		<div id="wrapper" >
+			<div id="top_bar">
+				<a href="#" style="text-decoration:none;"><span class="link" style="padding: 20px;">Change Language </span></a>
+				<input type="text" value="Search word" name="search" class="em text_box">
+			</div>
+			<div class="fl" id="left_menu">
+				<img src="images/logo.png" title="Logo" style="margin-left:20px;"/>
+<br />
+<br />
+				<ul>
+					<li>
+						<a href="#"><span class="link" > Home </span></a>
+					</li>
+					<li>
+						<a href="#"><span class="link" > Word of the day </span></a>
+					</li>
+					<li>
+						<a href="#"><span class="link" > Take Test </span></a>
+					</li>
+					<li>
+						<a href="#"><span class="link" > Revise words </span></a>
+					</li>
+					<li>
+						<a href="#"><span class="link" > Dashboard </span></a>
+					</li>
+					
+				</ul>
+									
+					 
+			</div>
+			<div class="fr scroll-pane" id="right_content">
+				<div class="box">
+					<h3>July 1, 2012</h3>
+					<div>
+						<h4>mumpsimus</h4>
+						<em class="s13 mt7">Adherence to or persistence in an erroneous use of language, memorization, practice, belief, etc., out of habit or obstinacy. </em>
+						<p class="s11 mt10">I profess, my good lady," replied I, "that had any one but you made such a declaration, I should have thought it as capricious as that of the clergyman, who, without vindicating his false reading, preferred, from habit's sake, his old Mumpsimus..</p>
+					</div>
+				</div>
+				<div class="box">
+					<h3>July 1, 2012</h3>
+					<div>
+						<h4>mumpsimus</h4>
+						<em class="s13 mt7">I profess, my good lady," replied I, "that had any one but you made such a declaration, I should have thought it as capricious as that of the clergyman, who, without vindicating his false reading, preferred, from habit's sake, his old Mumpsimus..I profess, my good lady," replied I, "that had any one but you made such a declaration, I should have thought it as capricious as that of the clergyman, who, without vindicating his false reading, preferred, from habit's sake, his old Mumpsimus.. </em>
+						<p class="s11 mt10">I profess, my good lady," replied I, "that had any one but you made such a declaration, I should have thought it as capricious as that of the clergyman, who, without vindicating his false reading, preferred, from habit's sake, his old Mumpsimus..</p>
+					</div>
+				</div>
+				<div class="box">
+					<h3>July 1, 2012</h3>
+					<div>
+						<h4>mumpsimus</h4>
+						<em class="s13 mt7">I profess, my good lady," replied I, "that had any one but you made such a declaration, I should have thought it as capricious as that of the clergyman, who, without vindicating his false reading, preferred, from habit's sake, his old Mumpsimus.. </em>
+						<p class="s11 mt10">I profess, my good lady," replied I, "that had any one but you made such a declaration, I should have thought it as capricious as that of the clergyman, who, without vindicating his false reading, preferred, from habit's sake, his old Mumpsimus..</p>
+					</div>
+				</div>
+				<div class="box">
+					<h3>July 1, 2012</h3>
+					<div>
+						<h4>mumpsimus</h4>
+						<em class="s13 mt7">Adherence to or persistence in an erroneous use of language, memorization, practice, belief, etc., out of habit or obstinacy. </em>
+						<p class="s11 mt10">I profess, my good lady," replied I, "that had any one but you made such a declaration, I should have thought it as capricious as that of the clergyman, who, without vindicating his false reading, preferred, from habit's sake, his old Mumpsimus..I profess, my good lady," replied I, "that had any one but you made such a declaration, I should have thought it as capricious as that of the clergyman, who, without vindicating his false reading, preferred, from habit's sake, his old Mumpsimus..I profess, my good lady," replied I, "that had any one but you made such a declaration, I should have thought it as capricious as that of the clergyman, who, without vindicating his false reading, preferred, from habit's sake, his old Mumpsimus..I profess, my good lady," replied I, "that had any one but you made such a declaration, I should have thought it as capricious as that of the clergyman, who, without vindicating his false reading, preferred, from habit's sake, his old Mumpsimus..I profess, my good lady," replied I, "that had any one but you made such a declaration, I should have thought it as capricious as that of the clergyman, who, without vindicating his false reading, preferred, from habit's sake, his old Mumpsimus..</p>
+					</div>
+				</div>
+				<div class="box">
+					<h3>July 1, 2012</h3>
+					<div>
+						<h4>mumpsimus</h4>
+						<em class="s13 mt7">Adherence to or persistence in an erroneous use of language, memorization, practice, belief, etc., out of habit or obstinacy. </em>
+						<p class="s11 mt10">I profess, my good lady," replied I, "that had any one but you made such a declaration, I should have thought it as capricious as that of the clergyman, who, without vindicating his false reading, preferred, from habit's sake, his old Mumpsimus..</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
 </html>
