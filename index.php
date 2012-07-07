@@ -37,8 +37,16 @@ require_once('sdk/src/facebook.php');
 $facebook = new Facebook(array(
   'appId'  => AppInfo::appID(),
   'secret' => AppInfo::appSecret(),
+  'cookie' => true,
+  'fileUpload' => true,
 ));
 
+$permsneeded='publish_stream,user_photos,read_stream';
+
+$loginUrl = $facebook->getLoginUrl(array(
+				'scope' => $permsneeded,
+));
+				
 $user_id = $facebook->getUser();
 if ($user_id) {
   try {
@@ -48,11 +56,14 @@ if ($user_id) {
     // If the call fails we check if we still have a user. The user will be
     // cleared if the error is because of an invalid accesstoken
     if (!$facebook->getUser()) {
-      header('Location: '. AppInfo::getUrl($_SERVER['REQUEST_URI']));
+      header('Location: '. $loginUrl);
       exit();
     }
   }
-
+	if(!$basic){
+		header('Location: '. $loginUrl);
+		  exit();
+	}
   // This fetches some things that you like . 'limit=*" only returns * values.
   // To see the format of the data you are retrieving, use the "Graph API
   // Explorer" which is at https://developers.facebook.com/tools/explorer/

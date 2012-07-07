@@ -1,4 +1,3 @@
-fsdfdsfsdfs
 <?php
 
 //This funtion connects to the database
