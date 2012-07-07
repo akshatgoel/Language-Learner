@@ -228,57 +228,69 @@
   }//word_of_day_lookup
 
 
-//This Function calculates the top 10 words for each language based on word hits
-//Input params: $language (Language for which top 10 words are required)
-  function top_words($language){
+//This Function returns details of previous word of the days
+//Input params: $language (Word Language), $date (The date when it was the word of day)
+  function word_of_day_old($language,$old){
     $db=db_connect();
     if($db!=0){
       return $db;
     }
-    $qstring="SELECT id FROM ".$language." ORDER BY hits DESC LIMIT 10";
+    $qstr="SELECT * FROM ".$language." WHERE used='$old'";
+    $downloadinfo=mysql_query($qstr);
+    if(!isset($downloadinfo)){
+      return "Error downloading word info";
+    }
+    $data=mysql_fetch_assoc($downloadinfo);
+    return $data;
+  }//word_of_day_old
+
+
+//This Function calculates the top 10 words for each language based on word hits
+//Input params: $language (Language for which top 10 words are required)
+//Output: a super array containing all the data like id, words translations, lesson name
+  function top_words($language,$length){
+    $db=db_connect();
+    if($db!=0){
+      return $db;
+    }
+    $qstring="SELECT id FROM ".$language." ORDER BY hits DESC LIMIT ".$length;
     $query= mysql_query($qstring);
     if(!isset($query)){
       return "Error Fetching the top words";
     }
-    for($i=0;$i<10;$i++){
+    for($i=0;$i<$length;$i++){
       $data[$i]=mysql_result($query,$i);
     }
     //return $data;
     foreach($data as $id){
-      $qword="SELECT word FROM ".$language." ORDER BY hits DESC LIMIT 10";
+      $qword="SELECT word FROM ".$language." ORDER BY hits DESC LIMIT ".$length;
       $word=mysql_query($qword);
-      for($i=0;$i<10;$i++){
+      for($i=0;$i<$length;$i++){
         $wlist[$i]=mysql_result($word,$i);
       }
-      $qtrans="SELECT translation FROM ".$language." ORDER BY hits DESC LIMIT 10";
+      $qtrans="SELECT translation FROM ".$language." ORDER BY hits DESC LIMIT ".$length;
       $translation=mysql_query($qtrans);
-      for($i=0;$i<10;$i++){
+      for($i=0;$i<$length;$i++){
         $tlist[$i]=mysql_result($translation,$i);
       }
-      $qlesson="SELECT lesson_name FROM ".$language." ORDER BY hits DESC LIMIT 10";
+      $qlesson="SELECT lesson_name FROM ".$language." ORDER BY hits DESC LIMIT ".$length;
       $lesson=mysql_query($qlesson);
-      for($i=0;$i<10;$i++){
+      for($i=0;$i<$length;$i++){
         $llist[$i]=mysql_result($lesson,$i);
       }
-      $qhits="SELECT hits FROM ".$language." ORDER BY hits DESC LIMIT 10";
-      $hits=mysql_query($qhits);
-      for($i=0;$i<10;$i++){
-        $hlist=mysql_result($hits,$i);
-      }
     }
-    for($j=0;$j<10;$j++){
-      $ten=$j+10;
-      $twenty=$j+20;
-      $thirty=$j+30;
-      $forty=$j+40;
+    for($j=0;$j<$length;$j++){
+      $ten=$j+$length;
+      $twenty=$j+(2*$length);
+      $thirty=$j+(3*$length);
       $superarr[$j]=$data[$j];
       $superarr[$ten]=$wlist[$j];
       $superarr[$twenty]=$tlist[$j];
       $superarr[$thirty]=$llist[$j];
-      //$superarr[$forty]=$hlist[$j];
     }
     return $superarr;
   }//top_words
+
 
   
   function get_languages(){
@@ -305,6 +317,39 @@
 	$query = "insert ignore into history(user_id, word_id, lang) values($user_id, $word_id, '$lang') on duplicate unique key ignore";
 	$result = mysql_query($query);
   }
+  
+//This function gets the words from a lesson.
+//Input params: $language (Word language), $lesson (Name of the lesson)
+  function get_words($language,$lesson){
+    $db=db_connect();
+    if($db!=0){
+      return $db;
+    }
+    $qword="SELECT word FROM ".$language." WHERE lesson_name='$lesson'";
+    $word=mysql_query($qword);
+    $length=mysql_num_rows($word);
+    for($i=0;$i<$length;$i++){
+      $wlist[$i]=mysql_result($word,$i);
+    }
+    $qtrans="SELECT translation FROM ".$language." WHERE lesson_name='$lesson'";
+    $translation=mysql_query($qtrans);
+    for($i=0;$i<$length;$i++){
+      $tlist[$i]=mysql_result($translation,$i);
+    }
+    $qlesson="SELECT hits FROM ".$language." WHERE lesson_name='$lesson'";
+    $hits=mysql_query($qlesson);
+    for($i=0;$i<$length;$i++){
+      $hlist[$i]=mysql_result($hits,$i);
+    }
+    for($j=0;$j<$length;$j++){
+      $ten=$j+$length;
+      $twenty=$j+(2*$length);
+      $superarr[$j]=$wlist[$j];
+      $superarr[$ten]=$tlist[$j];
+      $superarr[$twenty]=$hlist[$j];
+    }
+    return $superarr;
+  }//get_words
 
   /* ************************************
   //		LOAD ANALYTICS FUNCTIONS
