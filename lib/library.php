@@ -235,9 +235,13 @@
     if($db!=0){
       return $db;
     }
+<<<<<<< HEAD
+    $qstr="SELECT * FROM ".$language." WHERE used='$old'";
+=======
 	$used = date('Y-m-d',strtotime('-'.$old.' days'));
     $qstr="SELECT * FROM ".$language." WHERE used='$used'";
 	//echo $qstr;
+>>>>>>> 6c5e43a58202af63b80390a098f62dd6997b3b4d
     $downloadinfo=mysql_query($qstr);
     if(!isset($downloadinfo)){
       return "Error downloading word info";
@@ -340,6 +344,39 @@
 	$result = mysql_query($query);
 	return mysql_num_rows($result);
   }
+  
+//This function gets the words from a lesson.
+//Input params: $language (Word language), $lesson (Name of the lesson)
+  function get_words($language,$lesson){
+    $db=db_connect();
+    if($db!=0){
+      return $db;
+    }
+    $qword="SELECT word FROM ".$language." WHERE lesson_name='$lesson'";
+    $word=mysql_query($qword);
+    $length=mysql_num_rows($word);
+    for($i=0;$i<$length;$i++){
+      $wlist[$i]=mysql_result($word,$i);
+    }
+    $qtrans="SELECT translation FROM ".$language." WHERE lesson_name='$lesson'";
+    $translation=mysql_query($qtrans);
+    for($i=0;$i<$length;$i++){
+      $tlist[$i]=mysql_result($translation,$i);
+    }
+    $qlesson="SELECT hits FROM ".$language." WHERE lesson_name='$lesson'";
+    $hits=mysql_query($qlesson);
+    for($i=0;$i<$length;$i++){
+      $hlist[$i]=mysql_result($hits,$i);
+    }
+    for($j=0;$j<$length;$j++){
+      $ten=$j+$length;
+      $twenty=$j+(2*$length);
+      $superarr[$j]=$wlist[$j];
+      $superarr[$ten]=$tlist[$j];
+      $superarr[$twenty]=$hlist[$j];
+    }
+    return $superarr;
+  }//get_words
 
   /* ************************************
   //		LOAD ANALYTICS FUNCTIONS
