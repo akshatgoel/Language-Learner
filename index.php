@@ -157,10 +157,11 @@ $app_name = idx($app_info, 'name', '');
         fjs.parentNode.insertBefore(js, fjs);
       }(document, 'script', 'facebook-jssdk'));
     </script>
-	<div id="language_change">
+	<div id="language_change" style="display:none;" class="popup">
 		
 	</div>
 		<div id="wrapper" >
+		<?php var_dump(word_of_day_lookup('spanish')); ?>
 			<div id="top_bar">
 				<a href="javascript:void(0);" style="text-decoration:none;" id="change_language_btn"><span class="link" style="padding: 20px;">Change Language </span></a>
 				<input type="text" value="Search word" name="search" class="em text_box">
