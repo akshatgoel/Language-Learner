@@ -102,7 +102,6 @@ $app_name = idx($app_info, 'name', '');
     <script type="text/javascript" src="/javascript/jquery-1.7.1.min.js"></script>
 	
   <script type="text/javascript" src="/javascript/jquery.masonry.js" ></script>
-  <script type="text/javascript" src="/javascript/jquery.simplemodal.1.4.2.min.js" ></script>
   <script type="text/javascript">
 	$(document).ready(function(){
 	
@@ -132,7 +131,6 @@ $app_name = idx($app_info, 'name', '');
 		});
 		
 		$('#change_language_btn').click(function(){
-			
 			$.get('ajax/language.php', function(data) {
 				//  $.modal(data);
 				 alert('Load was performed.');
