@@ -10,13 +10,7 @@
 
 // Provides access to app specific values such as your app id and app secret.
 // Defined in 'AppInfo.php'
-define('ENVIRONMENT', 'development');
-switch(ENVIRONMENT){
-	case 'development' : error_reporting(E^ALL);
-						break;
-	case 'production' : error_reporting(0);
-						break;
-}
+
 require_once('AppInfo.php');
 require_once('lib/library.php') or die 'fdfdfdfdfd';
 // Enforce https on production
