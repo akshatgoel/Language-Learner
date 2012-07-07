@@ -17,11 +17,11 @@
         return 0;  //db selection ok
       }
       else{
-        die 'Cannot select the database';  //db selection failed
+        return 'Cannot select the database';  //db selection failed
       }
     }
     else{
-      die 'Cannot Connect to the server';  //connection to server failed
+      return 'Cannot Connect to the server';  //connection to server failed
     }
 
   }  //db_connect
@@ -249,4 +249,14 @@
     return $superarr;
   }//top_words
 
+  
+  function get_languages(){
+  
+	$db=db_connect();
+    if($db!=0){
+      return $db;
+    }
+	
+  
+  }
 ?>

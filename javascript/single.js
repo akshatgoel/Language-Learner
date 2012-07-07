@@ -27,7 +27,8 @@ $(document).ready(function(){
 		
 		$('#change_language_btn').click(function(){
 			$.get('ajax/language.php', function(data) {
-				  $.modal(data);
+				  $('#language_change').html(data);
+					$('#language_change').show();
 				// alert('Load was performed.');
 			});
 		
