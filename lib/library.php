@@ -11,6 +11,7 @@
     $password="6GAhVw8aWjPsMyZC";
     $db_name="fc_team_44";
     $connect=mysql_connect($server,$user,$password);
+	mysql_set_charset("utf8");
     if($connect){                       //connection to server ok
       $db_select = mysql_select_db($db_name,$connect);
       if($db_select){
@@ -237,7 +238,6 @@
     }
 	$used = date('Y-m-d',strtotime('-'.$old.' days'));
     $qstr="SELECT * FROM ".$language." WHERE used='$used'";
-	echo $qstr;
     $downloadinfo=mysql_query($qstr);
     if(!isset($downloadinfo)){
       return "Error downloading word info";
