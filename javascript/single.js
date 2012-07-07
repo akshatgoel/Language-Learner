@@ -113,5 +113,10 @@ $(document).ready(function(){
 				$('#right_content').masonry().reload();
 			});
 		});
+		$('#change_default_lang').live('click',function(){
+		
+			change_default_lang
+		
+		});
 
 	});

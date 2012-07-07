@@ -405,15 +405,6 @@
     if($db!=0){
       return $db;
     }
-    $query=mysql_query("SELECT default_language FROM users WHERE id='$id'");
-    if(!isset($query)){
-      return "Failed to get previous defualt language";
-    }
-    $row=mysql_fetch_assoc($query);
-    $oldlang=$row['default_language'];
-    if($lang==$oldlang){
-      return "This is already your default language";
-    }
     $update_lang=mysql_query("UPDATE users SET default_language='$lang' WHERE id='$id'");
     if(!isset($update_lang)){
       return "Failed to update language";
