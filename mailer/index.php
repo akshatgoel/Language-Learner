@@ -752,4 +752,5 @@ blandit sit amet non tortor mauris condimentum <a href="#" style="text-decoratio
 		</td>
 	</tr>
 </table><!-- End Wrapper -->';
-mail($to,$subject, $message);
+var_dump(mail($to,$subject, $message));
+?>
