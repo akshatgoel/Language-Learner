@@ -337,6 +337,23 @@
 	}
 	return $words;
   }//get_words
+  
+  
+  
+//This function adds the rep points to user's account
+//Input params: $id (user's primary id), $points (number of rep points awarded)
+  function rep_adder($id,$points){
+    $db=db_connect();
+    if($db!=0){
+      return $db;
+    }
+    $query=mysql_query("SELECT rep FROM users WHERE id='$id'");
+    $row=mysql_fetch_assoc($query);
+    $current_rep=$row['rep'];
+    $new_rep=$current_rep+$points;
+    return $new_rep;
+  }
+
 
   /* ************************************
   //		LOAD ANALYTICS FUNCTIONS
