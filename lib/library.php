@@ -17,11 +17,11 @@
         return 0;  //db selection ok
       }
       else{
-        return 'Cannot select the database';  //db selection failed
+        die 'Cannot select the database';  //db selection failed
       }
     }
     else{
-      return 'Cannot Connect to the server';  //connection to server failed
+      die 'Cannot Connect to the server';  //connection to server failed
     }
 
   }  //db_connect
