@@ -231,44 +231,37 @@
     if($db!=0){
       return $db;
     }
-    $qstring="SELECT id FROM ".$language." ORDER BY hits DESC LIMIT ".$length;
+    $qstring="SELECT * FROM ".$language." ORDER BY hits DESC LIMIT ".$length;
     $query= mysql_query($qstring);
     if(!isset($query)){
       return "Error Fetching the top words";
     }
-    for($i=0;$i<$length;$i++){
-      $data[$i]=mysql_result($query,$i);
-    }
-    //return $data;
-    foreach($data as $id){
-      $qword="SELECT word FROM ".$language." ORDER BY hits DESC LIMIT ".$length;
-      $word=mysql_query($qword);
-      for($i=0;$i<$length;$i++){
-        $wlist[$i]=mysql_result($word,$i);
-      }
-      $qtrans="SELECT translation FROM ".$language." ORDER BY hits DESC LIMIT ".$length;
-      $translation=mysql_query($qtrans);
-      for($i=0;$i<$length;$i++){
-        $tlist[$i]=mysql_result($translation,$i);
-      }
-      $qlesson="SELECT lesson_name FROM ".$language." ORDER BY hits DESC LIMIT ".$length;
-      $lesson=mysql_query($qlesson);
-      for($i=0;$i<$length;$i++){
-        $llist[$i]=mysql_result($lesson,$i);
-      }
-    }
-    for($j=0;$j<$length;$j++){
-      $ten=$j+$length;
-      $twenty=$j+(2*$length);
-      $thirty=$j+(3*$length);
-      $superarr[$j]=$data[$j];
-      $superarr[$ten]=$wlist[$j];
-      $superarr[$twenty]=$tlist[$j];
-      $superarr[$thirty]=$llist[$j];
-    }
-    return $superarr;
+	$words = array();
+    while($word = mysql_fetch_array($query)){
+		$words[] = $word;
+	}
+    return $words;
   }//top_words
 
+//This Function finds distinct lessons for each language
+//Input params: $language (Language)
+//Output: a super array containing all the data like id, words translations, lesson name
+  function get_lessons($language){
+    $db=db_connect();
+    if($db!=0){
+      return $db;
+    }
+    $qstring="SELECT distinct(lesson_name), count(word) as words FROM ".$language." GROUP BY lesson_name";
+    $query= mysql_query($qstring);
+    if(!isset($query)){
+      return "Error Fetching the top words";
+    }
+	$lessons = array();
+    while($lesson = mysql_fetch_array($query)){
+		$lessons[] = $lesson;
+	}
+    return $lessons;
+  }//get_lessons
 
   
   function get_languages(){
@@ -295,6 +288,8 @@
 	$user_id = mysql_real_escape_string($user_id);
 	$query = "insert ignore into history(user_id, word_id, lang) values($user_id, $word_id, '$lang')";
 	$result = mysql_query($query);
+	$query = "update $lang set hits = hits+1 where id= $word_id";
+	$result = mysql_query($query);
 	return 1;
   }
   function unlearn_word($word_id, $lang, $user_id){
@@ -306,6 +301,8 @@
 	$lang = mysql_real_escape_string($lang);
 	$user_id = mysql_real_escape_string($user_id);
 	$query = "delete from history where user_id = $user_id and word_id = $word_id and lang = '$lang'";
+	$result = mysql_query($query);
+	$query = "update $lang set hits = hits-1 where id= $word_id";
 	$result = mysql_query($query);
 	return 1;
   }

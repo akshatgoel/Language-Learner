@@ -30,8 +30,10 @@ $(document).ready(function(){
 		
 		$('#change_language_btn').click(function(){
 			$('.popup').hide();
+			$('#overlay').show();
 			$.get('ajax/language.php', function(data) {
 				  $('#language_change').html(data);
+					$('#overlay').hide();
 					$('#language_change').show();
 			});
 			$(window).bind('click', function(){
@@ -50,7 +52,9 @@ $(document).ready(function(){
 		$('.learn_btn').click(function(){
 			var word_id = $(this).attr('id').substring(4);
 			var btn = $(this);
-			$.post("ajax/learn_word.php",{id:word_id},function(result){  });
+			$('#overlay').show();
+			$.post("ajax/learn_word.php",{id:word_id},function(result){  
+			$('#overlay').hide();});
 			btn.html('Unlearn');
 			btn.removeClass('learn_btn');
 			btn.addClass('unlearn_btn');
@@ -58,7 +62,9 @@ $(document).ready(function(){
 		$('.unlearn_btn').click(function(){
 			var word_id = $(this).attr('id').substring(4);
 			var btn = $(this);
-			$.post("ajax/unlearn_word.php",{id:word_id},function(result){});
+			$('#overlay').show();
+			$.post("ajax/unlearn_word.php",{id:word_id},function(result){
+			$('#overlay').hide();});
 			btn.html('Learn');
 			btn.removeClass('unlearn_btn');
 			btn.addClass('learn_btn');
@@ -77,10 +83,22 @@ $(document).ready(function(){
 			$('.jspDrag').stop(true, true).fadeOut('slow');
 		});
 		
-		$('.lesson_link').click(function(){
+		
+		
+		$('.lesson_link').live('click',function(){
 			var lesson = $(this).attr('title');
+			$('#overlay').show();
 			$.post("ajax/load_lesson.php",{lessonName: lesson},function(result){
-				$('#right_content').html(result);
+				$('#right_content').html(result);$('#overlay').hide();
+				$('#right_content').masonry().reload();
+				
+			});
+		});
+		$('.ajax_link').click(function(){
+			$('#overlay').show();
+			var page = $(this).attr('title');
+			$.get("ajax/"+page+".php",function(result){
+				$('#right_content').html(result);$('#overlay').hide();
 				$('#right_content').masonry().reload();
 			});
 		});

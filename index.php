@@ -155,6 +155,9 @@ $app_name = idx($app_info, 'name', '');
         fjs.parentNode.insertBefore(js, fjs);
       }(document, 'script', 'facebook-jssdk'));
     </script>
+	<div id="overlay" style="display:none;background: rgba(15,15,15,0.6);height:150%;width:150%;z-index:200;position:absolute;top:0;left:0;">
+		<div style="position:absolute;z-index:205;top:20%;left:20%;" ><img src="images/loader.gif" width="200px"/></div>
+	</div>
 	<div id="language_change" class="popup">
 		
 	</div>
@@ -188,10 +191,10 @@ $app_name = idx($app_info, 'name', '');
 						<a href="#"><span class="link" > Word of the day </span></a>
 					</li>
 					<li>
-						<a href="#"><span class="link" > Browse Lessons </span></a>
+						<a href="javascript:void(0);" title="browse_lessons" class="ajax_link"><span class="link" > Browse Lessons </span></a>
 					</li>
 					<li>
-						<a href="#"><span class="link" > Top 10 words </span></a>
+						<a href="javascript:void(0);" title="top_words" class="ajax_link"><span class="link" > Top 10 words </span></a>
 					</li>
 					<li>
 						<a href="#"><span class="link" > Take Test </span></a>
