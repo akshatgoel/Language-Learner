@@ -165,26 +165,7 @@ try {
         $languageCode = $val;
     }
 
-    /*
-     * Get the language Names from languageCodes.
-     */
-    $locale = 'en';
-    $getLanguageNamesurl = "http://api.microsofttranslator.com/V2/Http.svc/GetLanguageNames?locale=$locale";
-    //Create the Request XML format.
-    $requestXml = $translatorObj->createReqXML($languageCode);
-    //Call the curlRequest.
-    $curlResponse = $translatorObj->curlRequest($getLanguageNamesurl, $authHeader, $requestXml);
-
-    //Interprets a string of XML into an object.
-    $xmlObj = simplexml_load_string($curlResponse);
-    echo "<table border=2px>";
-    echo "<tr>";
-    echo "<td><b>LanguageCodes</b></td><td><b>Language Names</b></td>";
-    echo "</tr>";
-    foreach($xmlObj->string as $language){
-        echo "<tr><td>".$inputStr."</td><td>". $languageCode."(".$language.")"."</td></tr>";
-    }
-    echo "</table>";
+   var_dump($strResponse);
 } catch (Exception $e) {
     echo "Exception: " . $e->getMessage() . PHP_EOL;
 }

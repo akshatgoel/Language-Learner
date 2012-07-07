@@ -57,6 +57,7 @@ if ($me){
 	if(($_SESSION['user'] = get_user($fb_id)) == -1){
 		$_SESSION['user']['id'] = add_user($fb_id, $access, $name, $email);
 		$_SESSION['user']['default_language'] = 'spanish';
+		added_user_beacon($_SESSION['user']['id']);
 	}
 	else{
 		update_user($fb_id, $access, $name, $email);
@@ -71,7 +72,6 @@ $app_info = $facebook->api('/'. AppInfo::appID());
 
 $app_name = idx($app_info, 'name', '');
 
-var_dump($_SESSION);
 ?>
 <!DOCTYPE html>
 <html xmlns:fb="http://ogp.me/ns/fb#" lang="en">

@@ -293,15 +293,6 @@
   
   }
   
-  function update_language_beacon($user_id, $lang){
-	$db=db_connect();
-    if($db!=0){
-      return $db;
-    }
-	$query = "insert into beacon(user_id, activity) values($user_id,'Lang-".$lang."')";
-	$result = mysql_query($query);
-	return mysql_insert_id();
-  }
   
   function learn_word($word_id, $lang, $user_id){
 	$db=db_connect();
@@ -314,4 +305,39 @@
 	$query = "insert ignore into history(user_id, word_id, lang) values($user_id, $word_id, '$lang') on duplicate unique key ignore";
 	$result = mysql_query($query);
   }
+
+  /* ************************************
+  //		LOAD ANALYTICS FUNCTIONS
+  *************************************** */
+  
+   function update_language_beacon($user_id, $lang){
+	$db=db_connect();
+    if($db!=0){
+      return $db;
+    }
+	$query = "insert into beacon(user_id, activity) values($user_id,'Lang-".$lang."')";
+	$result = mysql_query($query);
+	return mysql_insert_id();
+  }
+  
+	function added_user_beacon($user_id){
+		$db=db_connect();
+		if($db!=0){
+		  return $db;
+		}
+		$query = "insert into beacon(user_id, activity) values($user_id,'NewUser')";
+		$result = mysql_query($query);
+		return 1;
+	}
+	
+	function learnt_word_beacon($user_id,$word_id,$lang){
+		$db=db_connect();
+		if($db!=0){
+		  return $db;
+		}
+		$query = "insert into beacon(user_id, activity) values($user_id,'Learnt:".$word_id."::".$lang."')";
+		$result = mysql_query($query);
+		return 1;
+	}
+	
 ?>
