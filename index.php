@@ -100,7 +100,38 @@ $app_name = idx($app_info, 'name', '');
     <meta property="fb:app_id" content="<?php echo AppInfo::appID(); ?>" />
 
     <script type="text/javascript" src="/javascript/jquery-1.7.1.min.js"></script>
-
+	
+  <script type="text/javascript" src="/javascript/jquery.masonry.js" ></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+			
+				var inpVal = '';
+				
+				$('#right_content').masonry({
+				  itemSelector: '.box',
+				  animate:true
+				});
+				
+				$(window).bind("resize", function(){ $('#right_content').masonry().reload(); });
+				
+				$('.text_box').focus(function(){
+				
+					inpVal = $(this).val();
+					$(this).val('');
+					$(this).removeClass('em');
+				
+				});
+				$('.text_box').blur(function(){
+				
+					if($(this).val() == ''){
+						$(this).val(inpVal);
+						$(this).addClass('em');
+					}
+				
+				});
+				
+			});
+		</script>
     <script type="text/javascript">
       function logResponse(response) {
         if (console && console.log) {
@@ -166,37 +197,6 @@ $app_name = idx($app_info, 'name', '');
     <![endif]-->
   </head>
   
-  <script src="jquery.masonry.js" ></script>
-		<script>
-			$(document).ready(function(){
-			
-				var inpVal = '';
-				
-				$('#right_content').masonry({
-				  itemSelector: '.box',
-				  animate:true
-				});
-				
-				$(window).bind("resize", function(){ $('#right_content').masonry().reload(); });
-				
-				$('.text_box').focus(function(){
-				
-					inpVal = $(this).val();
-					$(this).val('');
-					$(this).removeClass('em');
-				
-				});
-				$('.text_box').blur(function(){
-				
-					if($(this).val() == ''){
-						$(this).val(inpVal);
-						$(this).addClass('em');
-					}
-				
-				});
-				
-			});
-		</script>
 		
   <body>
     <div id="fb-root"></div>
