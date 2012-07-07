@@ -6,10 +6,10 @@
 //Returns 1 if connection to server failed, Returns 2 if connection to database failed
 
   function db_connect(){
-    $server="localhost";
-    $user="root";
-    $password="";
-    $db_name="facecode";
+    $server="182.72.63.18";
+    $user="fc_team_44";
+    $password="6GAhVw8aWjPsMyZC";
+    $db_name="fc_team_44";
     $connect=mysql_connect($server,$user,$password);
     if($connect){                       //connection to server ok
       $db_select = mysql_select_db($db_name,$connect);

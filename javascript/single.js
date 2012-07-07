@@ -33,4 +33,12 @@ $(document).ready(function(){
 		
 		});
 		
+		$('.learn_btn').click(function(){
+		
+			var word_id = $(this).attr('id').substring(4);
+			$.post("ajax/learn_word.php",{id:word_id},function(result){
+				$("span").html(result);
+			  });
+		
+		});
 	});
