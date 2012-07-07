@@ -204,34 +204,10 @@
   }//word_of_day
 
 
-//This function looksup for the word of the day for a specific language in the db
-//Input params: $language (The language we want to look up for)
-//Output : It returns and array containing the word and translation of the word
-  function word_of_day_lookup($language){
-    $db=db_connect();
-    if($db!=0){
-      return $db;
-    }
-    $query=mysql_query("SELECT tab_id FROM word WHERE language='$language'");
-    if(!isset($query)){
-      return "Error selecting the tab_id";
-    }
-    while($row=mysql_fetch_assoc($query)){
-      $tab_id=$row["tab_id"];
-    }
-    $qstr="SELECT * FROM ".$language." WHERE id='$tab_id'";
-    $downloadinfo=mysql_query($qstr);
-    if(!isset($downloadinfo)){
-      return "Error downloading word info";
-    }
-    $data=mysql_fetch_assoc($downloadinfo);
-    return $data;
-  }//word_of_day_lookup
-
 
 //This Function returns details of previous word of the days
 //Input params: $language (Word Language), $date (The date when it was the word of day)
-  function word_of_day_old($language,$old){
+  function word_of_day_lookup($language,$old){
     $db=db_connect();
     if($db!=0){
       return $db;

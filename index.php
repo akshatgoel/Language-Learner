@@ -212,7 +212,7 @@ $app_name = idx($app_info, 'name', '');
 			</div>
 			<div class="fr scroll-pane" id="right_content">
 				<?php for($i=0;$i<8;$i++){ ?>
-				<?php $today = word_of_day_old($_SESSION['user']['user_language'], $i); ?>
+				<?php $today = word_of_day_lookup($_SESSION['user']['user_language'], $i); ?>
 				<div class="box">
 					<h3> <?php echo date('j F Y',strtotime($today['used'])); ?><?php
 					switch(is_learnt($today['id'],$_SESSION['user']['user_language'], $_SESSION['user']['id'])){
