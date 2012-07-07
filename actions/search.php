@@ -165,7 +165,7 @@ try {
         $languageCode = $val;
     }
 
-   var_dump($strResponse);
+   //var_dump($strResponse);
 } catch (Exception $e) {
     echo "Exception: " . $e->getMessage() . PHP_EOL;
 }
