@@ -228,61 +228,74 @@
   }//word_of_day_lookup
 
 
-//This Function calculates the top 10 words for each language based on word hits
-//Input params: $language (Language for which top 10 words are required)
-  function top_words($language){
+//This Function returns details of previous word of the days
+//Input params: $language (Word Language), $date (The date when it was the word of day)
+  function word_of_day_old($language,$old){
     $db=db_connect();
     if($db!=0){
       return $db;
     }
-    $qstring="SELECT id FROM ".$language." ORDER BY hits DESC LIMIT 10";
+	$used = date('Y-m-d',strtotime('-'.$old.' days'));
+    $qstr="SELECT * FROM ".$language." WHERE used='$used'";
+	//echo $qstr;
+    $downloadinfo=mysql_query($qstr);
+    if(!isset($downloadinfo)){
+      return "Error downloading word info";
+    }
+    $data=mysql_fetch_assoc($downloadinfo);
+    return $data;
+  }//word_of_day_old
+
+
+//This Function calculates the top 10 words for each language based on word hits
+//Input params: $language (Language for which top 10 words are required)
+//Output: a super array containing all the data like id, words translations, lesson name
+  function top_words($language,$length){
+    $db=db_connect();
+    if($db!=0){
+      return $db;
+    }
+    $qstring="SELECT id FROM ".$language." ORDER BY hits DESC LIMIT ".$length;
     $query= mysql_query($qstring);
     if(!isset($query)){
       return "Error Fetching the top words";
     }
-    for($i=0;$i<10;$i++){
+    for($i=0;$i<$length;$i++){
       $data[$i]=mysql_result($query,$i);
     }
     //return $data;
     foreach($data as $id){
-      $qword="SELECT word FROM ".$language." ORDER BY hits DESC LIMIT 10";
+      $qword="SELECT word FROM ".$language." ORDER BY hits DESC LIMIT ".$length;
       $word=mysql_query($qword);
-      for($i=0;$i<10;$i++){
+      for($i=0;$i<$length;$i++){
         $wlist[$i]=mysql_result($word,$i);
       }
-      $qtrans="SELECT translation FROM ".$language." ORDER BY hits DESC LIMIT 10";
+      $qtrans="SELECT translation FROM ".$language." ORDER BY hits DESC LIMIT ".$length;
       $translation=mysql_query($qtrans);
-      for($i=0;$i<10;$i++){
+      for($i=0;$i<$length;$i++){
         $tlist[$i]=mysql_result($translation,$i);
       }
-      $qlesson="SELECT lesson_name FROM ".$language." ORDER BY hits DESC LIMIT 10";
+      $qlesson="SELECT lesson_name FROM ".$language." ORDER BY hits DESC LIMIT ".$length;
       $lesson=mysql_query($qlesson);
-      for($i=0;$i<10;$i++){
+      for($i=0;$i<$length;$i++){
         $llist[$i]=mysql_result($lesson,$i);
       }
-      $qhits="SELECT hits FROM ".$language." ORDER BY hits DESC LIMIT 10";
-      $hits=mysql_query($qhits);
-      for($i=0;$i<10;$i++){
-        $hlist=mysql_result($hits,$i);
-      }
     }
-    for($j=0;$j<10;$j++){
-      $ten=$j+10;
-      $twenty=$j+20;
-      $thirty=$j+30;
-      $forty=$j+40;
+    for($j=0;$j<$length;$j++){
+      $ten=$j+$length;
+      $twenty=$j+(2*$length);
+      $thirty=$j+(3*$length);
       $superarr[$j]=$data[$j];
       $superarr[$ten]=$wlist[$j];
       $superarr[$twenty]=$tlist[$j];
       $superarr[$thirty]=$llist[$j];
-      //$superarr[$forty]=$hlist[$j];
     }
     return $superarr;
   }//top_words
 
+
   
   function get_languages(){
-  
 	$db=db_connect();
     if($db!=0){
       return $db;
@@ -290,7 +303,6 @@
 	$query = "select distinct(name) from languages";
 	$result = mysql_query($query);
 	return $result;
-  
   }
   
   
@@ -302,8 +314,20 @@
 	$word_id = mysql_real_escape_string($word_id);
 	$lang = mysql_real_escape_string($lang);
 	$user_id = mysql_real_escape_string($user_id);
-	$query = "insert ignore into history(user_id, word_id, lang) values($user_id, $word_id, '$lang') on duplicate unique key ignore";
+	$query = "insert ignore into history(user_id, word_id, lang) values($user_id, $word_id, '$lang')";
 	$result = mysql_query($query);
+  }
+  function is_learnt($word_id, $lang, $user_id){
+	$db=db_connect();
+    if($db!=0){
+      return $db;
+    }
+	$word_id = mysql_real_escape_string($word_id);
+	$lang = mysql_real_escape_string($lang);
+	$user_id = mysql_real_escape_string($user_id);
+	$query = "select id from history where user_id = $user_id and word_id = $word_id and lang = '$lang'";
+	$result = mysql_query($query);
+	return mysql_num_rows($result);
   }
 
   /* ************************************

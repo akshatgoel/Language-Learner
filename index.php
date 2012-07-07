@@ -54,13 +54,18 @@ if ($me){
 	$access = $facebook->getAccesstoken();
 	$name = $me['name'];
 	$email = $me['email'];
-	if(($_SESSION['user'] = get_user($fb_id)) == -1){
+	if(get_user($fb_id) == -1){
 		$_SESSION['user']['id'] = add_user($fb_id, $access, $name, $email);
-		$_SESSION['user']['default_language'] = 'spanish';
+		if(empty($_SESSION['user']['user_language'])) $_SESSION['user']['user_language'] = $_SESSION['user']['default_language'];
 		added_user_beacon($_SESSION['user']['id']);
 	}
 	else{
 		update_user($fb_id, $access, $name, $email);
+		
+		if($_SESSION['user']['user_language'] == ''){
+		$_SESSION['user']['user_language'] = $_SESSION['user']['default_language'];
+		
+		}
 	}
 }
 else {			
@@ -165,10 +170,9 @@ $app_name = idx($app_info, 'name', '');
 		<br />
 	</div>
 		<div id="wrapper" >
-		<?php //var_dump(word_of_day_lookup('spanish')); ?>
 			<div id="top_bar">
 				<a href="javascript:void(0);" style="text-decoration:none;" id="change_language_btn"><span class="link" style="padding: 20px;">Change Language </span></a>
-				<form method="post" action="actions/search.php" id="search_form">
+				<form method="post" action="actions/search.php" id="search_form" style="margin-top:-15px;">
 					<input type="submit" value="search" style="width: 100px;margin-right: 14%;cursor:pointer;margin-left:7px;padding-top:7px;padding-bottom:9px;">
 					<input type="text" value="Search word" name="search" class="em text_box">
 				</form>
@@ -208,47 +212,26 @@ $app_name = idx($app_info, 'name', '');
 					 
 			</div>
 			<div class="fr scroll-pane" id="right_content">
-				<?php $word = top_words($_SESSION['user']['default_language']); ?>
+				<?php for($i=0;$i<8;$i++){ ?>
+				<?php $today = word_of_day_old($_SESSION['user']['user_language'], $i); ?>
 				<div class="box">
-					<h3> <?php echo $word['used']; ?><span class="learn_btn" id="word1">Learn</span></h3>
+					<h3> <?php echo date('j F Y',strtotime($today['used'])); ?><span class="learn_btn" id="word<?php echo $today['id']; ?>"><?php
+					switch(is_learnt($today['id'],$_SESSION['user']['user_language'], $_SESSION['user']['id'])){
+						case 1 : echo 'Learnt';
+									break;
+						case 0 : 
+						default: echo 'Learn';
+									break;
+					}
+					?></span></h3>
 					<div>
-						<h4>mumpsimus</h4>
-						<em class="s13 mt7">Adherence to or persistence in an erroneous use of language, memorization, practice, belief, etc., out of habit or obstinacy. </em>
-						<p class="s11 mt10">I profess, my good lady," replied I, "that had any one but you made such a declaration, I should have thought it as capricious as that of the clergyman, who, without vindicating his false reading, preferred, from habit's sake, his old Mumpsimus..</p>
+						<h4><?php echo $today['word']; ?></h4>
+						<em class="s13 mt7"><?php echo $today['translation']; ?></em>
+						<p class="s11 mt10"><a href="javascript:void(0);" title="<?php echo $today['lesson_name']; ?>" class="lesson_link"><?php echo $today['lesson_name']; ?></a></p>
 					</div>
 				</div>
-				<div class="box">
-					<h3>July 1, 2012<span class="learn_btn">Learn</span></h3>
-					<div>
-						<h4>mumpsimus</h4>
-						<em class="s13 mt7">I profess, my good lady," replied I, "that had any one but you made such a declaration, I should have thought it as capricious as that of the clergyman, who, without vindicating his false reading, preferred, from habit's sake, his old Mumpsimus..I profess, my good lady," replied I, "that had any one but you made such a declaration, I should have thought it as capricious as that of the clergyman, who, without vindicating his false reading, preferred, from habit's sake, his old Mumpsimus.. </em>
-						<p class="s11 mt10">I profess, my good lady," replied I, "that had any one but you made such a declaration, I should have thought it as capricious as that of the clergyman, who, without vindicating his false reading, preferred, from habit's sake, his old Mumpsimus..</p>
-					</div>
-				</div>
-				<div class="box">
-					<h3>July 1, 2012<span class="learn_btn">Learn</span></h3>
-					<div>
-						<h4>mumpsimus</h4>
-						<em class="s13 mt7">I profess, my good lady," replied I, "that had any one but you made such a declaration, I should have thought it as capricious as that of the clergyman, who, without vindicating his false reading, preferred, from habit's sake, his old Mumpsimus.. </em>
-						<p class="s11 mt10">I profess, my good lady," replied I, "that had any one but you made such a declaration, I should have thought it as capricious as that of the clergyman, who, without vindicating his false reading, preferred, from habit's sake, his old Mumpsimus..</p>
-					</div>
-				</div>
-				<div class="box">
-					<h3>July 1, 2012<span class="learn_btn">Learn</span></h3>
-					<div>
-						<h4>mumpsimus</h4>
-						<em class="s13 mt7">Adherence to or persistence in an erroneous use of language, memorization, practice, belief, etc., out of habit or obstinacy. </em>
-						<p class="s11 mt10">I profess, my good lady," replied I, "that had any one but you made such a declaration, I should have thought it as capricious as that of the clergyman, who, without vindicating his false reading, preferred, from habit's sake, his old Mumpsimus..I profess, my good lady," replied I, "that had any one but you made such a declaration, I should have thought it as capricious as that of the clergyman, who, without vindicating his false reading, preferred, from habit's sake, his old Mumpsimus..I profess, my good lady," replied I, "that had any one but you made such a declaration, I should have thought it as capricious as that of the clergyman, who, without vindicating his false reading, preferred, from habit's sake, his old Mumpsimus..I profess, my good lady," replied I, "that had any one but you made such a declaration, I should have thought it as capricious as that of the clergyman, who, without vindicating his false reading, preferred, from habit's sake, his old Mumpsimus..I profess, my good lady," replied I, "that had any one but you made such a declaration, I should have thought it as capricious as that of the clergyman, who, without vindicating his false reading, preferred, from habit's sake, his old Mumpsimus..</p>
-					</div>
-				</div>
-				<div class="box">
-					<h3>July 1, 2012<span style="float:right;padding-right: 5px;">Learn</span></h3>
-					<div>
-						<h4>mumpsimus</h4>
-						<em class="s13 mt7">Adherence to or persistence in an erroneous use of language, memorization, practice, belief, etc., out of habit or obstinacy. </em>
-						<p class="s11 mt10">I profess, my good lady," replied I, "that had any one but you made such a declaration, I should have thought it as capricious as that of the clergyman, who, without vindicating his false reading, preferred, from habit's sake, his old Mumpsimus..</p>
-					</div>
-				</div>
+				<?php } ?>
+				
 			</div>
 		</div>
 	</body>
