@@ -26,7 +26,38 @@
 
   }  //db_connect
 
-
+	function get_user($fbid){
+		$db=db_connect();
+		if($db!=0){
+		  return $db;
+		}
+		$query = "select * from users where fb_id = $fbid";
+		$result = mysql_query($query);
+		if(mysql_num_rows($result)){
+			$data =  mysql_fetch_array($result);
+			return $data;
+		}
+		return '-1';
+	}
+	function update_user($fbid, $access, $name, $email){
+		$db=db_connect();
+		if($db!=0){
+		  return $db;
+		}
+		$query = "update users set access_token = '$access', username = '$name', email = '$email' where fb_id = $fbid";
+		$result = mysql_query($query);
+		//return mysql_affected_rows();
+	}
+	
+	function add_user($fb_id, $access, $username, $email){
+		$db=db_connect();
+		if($db!=0){
+		  return $db;
+		}
+		$query = "insert into users(fb_id, access_token, username, email) values($fb_id,'$access','$username','$email'); ";
+		$result = mysql_query($query);
+		return mysql_insert_id();
+	}
 
 //This Function Gets the Current Status of email notifications of user
 //Input Params : $id (Primary key of the user)
@@ -256,7 +287,31 @@
     if($db!=0){
       return $db;
     }
-	
+	$query = "select distinct(name) from languages";
+	$result = mysql_query($query);
+	return $result;
   
+  }
+  
+  function update_language_beacon($user_id, $lang){
+	$db=db_connect();
+    if($db!=0){
+      return $db;
+    }
+	$query = "insert into beacon(user_id, activity) values($user_id,'Lang-".$lang."')";
+	$result = mysql_query($query);
+	return mysql_insert_id();
+  }
+  
+  function learn_word($word_id, $lang, $user_id){
+	$db=db_connect();
+    if($db!=0){
+      return $db;
+    }
+	$word_id = mysql_real_escape_string($word_id);
+	$lang = mysql_real_escape_string($lang);
+	$user_id = mysql_real_escape_string($user_id);
+	$query = "insert ignore into history(user_id, word_id, lang) values($user_id, $word_id, '$lang') on duplicate unique key ignore";
+	$result = mysql_query($query);
   }
 ?>

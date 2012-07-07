@@ -1,13 +1,5 @@
 <?php
-
-/**
- * This sample app is provided to kickstart your experience using Facebook's
- * resources for developers.  This sample app provides examples of several
- * key concepts, including authentication, the Graph API, and FQL (Facebook
- * Query Language). Please visit the docs at 'developers.facebook.com/docs'
- * to learn more about the resources available to you
- */
-
+session_start();
 // Provides access to app specific values such as your app id and app secret.
 // Defined in 'AppInfo.php'
 
@@ -40,47 +32,38 @@ $facebook = new Facebook(array(
   'cookie' => true,
   'fileUpload' => true,
 ));
-
-$permsneeded='publish_stream,user_photos,read_stream';
+//edit the permissions needed
+$permsneeded='publish_stream,user_photos,read_stream,email';
 
 $loginUrl = $facebook->getLoginUrl(array(
 				'scope' => $permsneeded,
 ));
-				
 $user_id = $facebook->getUser();
-if ($user_id) {
-  try {
-    // Fetch the viewer's basic information
-    $basic = $facebook->api('/me');
-  } catch (FacebookApiException $e) {
-    // If the call fails we check if we still have a user. The user will be
-    // cleared if the error is because of an invalid accesstoken
-    if (!$facebook->getUser()) {
-      header('Location: '. $loginUrl);
-      exit();
-    }
-  }
-	if(!$basic){
-		header('Location: '. $loginUrl);
-		  exit();
+
+if($user_id) {
+	try {
+		$me = $facebook->api('/me'); 
+		} catch(Exception $e) {
+			error_log($e);
+			echo "<script type='text/javascript'>window.top.location.href = '$loginUrl';</script>";	exit;
 	}
-  // This fetches some things that you like . 'limit=*" only returns * values.
-  // To see the format of the data you are retrieving, use the "Graph API
-  // Explorer" which is at https://developers.facebook.com/tools/explorer/
-  $likes = idx($facebook->api('/me/likes?limit=4'), 'data', array());
+}
 
-  // This fetches 4 of your friends.
-  $friends = idx($facebook->api('/me/friends?limit=4'), 'data', array());
-
-  // And this returns 16 of your photos.
-  $photos = idx($facebook->api('/me/photos?limit=16'), 'data', array());
-
-  // Here is an example of a FQL call that fetches all of your friends that are
-  // using this app
-  $app_using_friends = $facebook->api(array(
-    'method' => 'fql.query',
-    'query' => 'SELECT uid, name FROM user WHERE uid IN(SELECT uid2 FROM friend WHERE uid1 = me()) AND is_app_user = 1'
-  ));
+if ($me){
+	$fb_id = $facebook->getUser();
+	$access = $facebook->getAccesstoken();
+	$name = $me['name'];
+	$email = $me['email'];
+	if(($_SESSION['user'] = get_user($fb_id)) == -1){
+		$_SESSION['user']['id'] = add_user($fb_id, $access, $name, $email);
+		$_SESSION['user']['default_language'] = 'spanish';
+	}
+	else{
+		update_user($fb_id, $access, $name, $email);
+	}
+}
+else {			
+	echo "<script type='text/javascript'>window.top.location.href = '$loginUrl';</script>";	exit;
 }
 
 // Fetch the basic info of the app that they are using
@@ -88,9 +71,7 @@ $app_info = $facebook->api('/'. AppInfo::appID());
 
 $app_name = idx($app_info, 'name', '');
 
-
-var_dump($facebook->api('/me'));
-die;
+var_dump($_SESSION);
 ?>
 <!DOCTYPE html>
 <html xmlns:fb="http://ogp.me/ns/fb#" lang="en">
@@ -100,6 +81,7 @@ die;
 
     <title><?php echo he($app_name); ?></title>
 	<link rel="stylesheet" href="stylesheets/styles.css" media="Screen" type="text/css" />
+	<link rel="stylesheet" href="stylesheets/jquery.jscrollpane.css" media="Screen" type="text/css" />
 
     <!-- These are Open Graph tags.  They add meta data to your  -->
     <!-- site that facebook uses when your content is shared     -->
@@ -119,7 +101,11 @@ die;
   <script type="text/javascript" src="/javascript/jquery.masonry.js" ></script>
   <script type="text/javascript" src="/javascript/single.js" ></script>
     <script type="text/javascript" src="/javascript/fb.js" ></script>
+<!-- the mousewheel plugin - optional to provide mousewheel support -->
+	<script type="text/javascript" src="/javascript/jquery.mousewheel.js"></script>
 
+	<!-- the jScrollPane script -->
+	<script type="text/javascript" src="/javascript/jquery.jscrollpane.min.js"></script>
     <!--[if IE]>
       <script type="text/javascript">
         var tags = ['header', 'section'];
@@ -165,14 +151,27 @@ die;
         fjs.parentNode.insertBefore(js, fjs);
       }(document, 'script', 'facebook-jssdk'));
     </script>
-	<div id="language_change" style="display:none;" class="popup">
+	<div id="language_change" class="popup">
 		
 	</div>
+	<div id="help_div" class="popup content-area" style="max-width:50%;max-height:40%;">
+		<h2 class="ul pb10" style="text-shadow: 0 0 3px #cfcfcf;">Help</h2>
+		<h3> Why can't I view the application correctly?</h3>
+		<p class="pb10">We use a standard technology called HTML5 in our application. Most modern web browsers like Safari, Firefox, and Chrome work well with HTML5. If you're not using an HTML5 compliant browser, we recommend you upgrade.</p>
+
+		<h3> Why can't I login on the application?</h3>
+		<p class="pb10">Please check that you are using modern web browsers like Safari, Firefox and Chrome. Also, make sure you don't have VPN connections activated.</p>
+		<br />
+		<br />
+	</div>
 		<div id="wrapper" >
-		<?php var_dump(word_of_day_lookup('spanish')); ?>
+		<?php //var_dump(word_of_day_lookup('spanish')); ?>
 			<div id="top_bar">
 				<a href="javascript:void(0);" style="text-decoration:none;" id="change_language_btn"><span class="link" style="padding: 20px;">Change Language </span></a>
-				<input type="text" value="Search word" name="search" class="em text_box">
+				<form method="post" action="actions/search.php" id="search_form">
+					<input type="submit" value="search" style="width: 100px;margin-right: 14%;cursor:pointer;margin-left:7px;padding-top:7px;padding-bottom:9px;">
+					<input type="text" value="Search word" name="search" class="em text_box">
+				</form>
 			</div>
 			<div class="fl" id="left_menu">
 				<img src="images/logo.png" title="Logo" style="margin-left:20px;"/>
@@ -202,15 +201,16 @@ die;
 					</li>
 					
 					<li>
-						<a href="#"><span class="link" > Help </span></a>
+						<a href="javascript:void(0);" id="help_btn"><span class="link"> Help </span></a>
 					</li>
 				</ul>
 									
 					 
 			</div>
 			<div class="fr scroll-pane" id="right_content">
+				<?php $word = top_words($_SESSION['user']['default_language']); ?>
 				<div class="box">
-					<h3>July 1, 2012 <span class="learn_btn">Learn</span></h3>
+					<h3> <?php echo $word['used']; ?><span class="learn_btn" id="word1">Learn</span></h3>
 					<div>
 						<h4>mumpsimus</h4>
 						<em class="s13 mt7">Adherence to or persistence in an erroneous use of language, memorization, practice, belief, etc., out of habit or obstinacy. </em>
