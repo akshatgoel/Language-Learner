@@ -121,6 +121,7 @@ $app_name = idx($app_info, 'name', '');
   
 		
   <body>
+  <input type="hidden" value="<?php echo $_SESSION['user']['default_language']; ?>" id="user_def_lang">
     <div id="fb-root"></div>
     <script type="text/javascript">
       window.fbAsyncInit = function() {
@@ -155,8 +156,8 @@ $app_name = idx($app_info, 'name', '');
         fjs.parentNode.insertBefore(js, fjs);
       }(document, 'script', 'facebook-jssdk'));
     </script>
-	<div id="overlay" style="display:none;background: rgba(15,15,15,0.6);height:150%;width:150%;z-index:200;position:absolute;top:0;left:0;">
-		<div style="position:absolute;z-index:205;top:20%;left:20%;" ><img src="images/loader.gif" width="200px"/></div>
+	<div id="overlay" style="display:none;height:100px;width:150px;z-index:200;position:absolute;top:40%;left:40%;">
+		<div style="position:absolute;z-index:205;top:20%;left:20%;" ><img src="images/loader.gif"/></div>
 	</div>
 	<div id="language_change" class="popup">
 		

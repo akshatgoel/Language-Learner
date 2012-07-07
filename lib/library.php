@@ -370,31 +370,19 @@
     if($db!=0){
       return $db;
     }
-    $qstr="SELECT word_id FROM history WHERE user_id='$id' AND lang='$language' AND flag='$flag'";
+   // $qstr="SELECT word,translation,lesson_name FROM ".$language." WHERE id IN (SELECT word_id FROM history WHERE user_id='$id' AND lang='$language' AND flag='$flag')";
+	$qstr = "SELECT word,translation,lesson_name ,history.timestamp FROM ".$language.",history WHERE ".$language.".id = history.word_id and history.user_id='".$id."' and history.lang='".$language."' AND history.flag='".$flag."'";
     $query=mysql_query($qstr);
     $num_words=mysql_num_rows($query);
     if($num_words==0){
       return "No Words Found";
     }
-    $id_list=array();
-    while($word_id = mysql_fetch_assoc($query)){
-      $id_list[] = $word_id['word_id'];
-      }
-      //return $id_list;
-      $number=count($id_list);
-      foreach($id_list as $u){
-        $getwords="SELECT word,translation,lesson_name FROM ".$language." WHERE id='$u'";
-        $runquery=mysql_query($getwords);
-        $words = array();
-        while($word = mysql_fetch_array($runquery)){
-          $words[] = $word;
-	}
 	//return $words;
-	for($i=0;$i<$number;$i++){
-          $arr[$i]=$words;
-        }
-      }
-      return $arr;
+	$arr = array();
+	while($words = mysql_fetch_array($query)){
+          $arr[]=$words;
+    }
+    return $arr;
   }//browse_words
 
 
@@ -405,8 +393,9 @@
     if($db!=0){
       return $db;
     }
-    $update_lang=mysql_query("UPDATE users SET default_language='$lang' WHERE id='$id'");
-    if(!isset($update_lang)){
+	$query = "UPDATE users SET default_language='$lang' WHERE id='$id'";
+    $update_lang=mysql_query($query);
+    if(!mysql_affected_rows()){
       return "Failed to update language";
     }
     return "Default Language Changed Successfully";
@@ -425,6 +414,15 @@
       return $db;
     }
 	$query = "insert into beacon(user_id, activity) values($user_id,'Lang-".$lang."')";
+	$result = mysql_query($query);
+	return mysql_insert_id();
+  }
+  function update_def_language_beacon($user_id, $lang){
+	$db=db_connect();
+    if($db!=0){
+      return $db;
+    }
+	$query = "insert into beacon(user_id, activity) values($user_id,'Def-".$lang."')";
 	$result = mysql_query($query);
 	return mysql_insert_id();
   }

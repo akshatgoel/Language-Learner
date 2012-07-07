@@ -37,7 +37,7 @@ $(document).ready(function(){
 					$('#language_change').show();
 			});
 			$(window).bind('click', function(){
-				if(is_in_popup == false){ $('#language_change').hide(); $(window).unbind('click'); }
+				if(is_in_popup == false){ $('#language_change').hide(); }
 			});
 		});
 		
@@ -46,7 +46,7 @@ $(document).ready(function(){
 			$('.popup').hide();
 			$('#help_div').show();
 			$(window).bind('click', function(){
-				if(is_in_popup == false){ $('#help_div').hide(); $(window).unbind('click'); }
+				if(is_in_popup == false){ $('#help_div').hide(); }
 			});
 		});
 		
@@ -113,10 +113,13 @@ $(document).ready(function(){
 				$('#right_content').masonry().reload();
 			});
 		});
-		$('#change_default_lang').live('click',function(){
-		
-			change_default_lang
-		
+		$('#change_default').live('change',function(){
+			var langg = $('#change_default option:selected').val();
+			if( langg != $('#user_def_lang').val()){
+				$.post('actions/up_def_lang.php',{lang: langg}, function(data) {
+					$('#user_def_lang').val(langg);
+				});
+			}
 		});
 
 	});
