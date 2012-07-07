@@ -63,7 +63,7 @@ if ($me){
 	else{
 		update_user($fb_id, $access, $name, $email);
 		
-		if($_SESSION['user']['user_language'] == ''){
+		if(empty($_SESSION['user']['user_language'])){
 		$_SESSION['user']['user_language'] = $_SESSION['user']['default_language'];
 		
 		}
