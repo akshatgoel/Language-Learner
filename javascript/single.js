@@ -33,7 +33,6 @@ $(document).ready(function(){
 			$.get('ajax/language.php', function(data) {
 				  $('#language_change').html(data);
 					$('#language_change').show();
-				// alert('Load was performed.');
 			});
 			$(window).bind('click', function(){
 				if(is_in_popup == false){ $('#language_change').hide(); }
@@ -50,8 +49,9 @@ $(document).ready(function(){
 		
 		$('.learn_btn').click(function(){
 			var word_id = $(this).attr('id').substring(4);
+			var btn = $(this);
 			$.post("ajax/learn_word.php",{id:word_id},function(result){
-				$(this).html(result);
+				btn.html(result);
 			  });
 		});
 		
@@ -66,6 +66,13 @@ $(document).ready(function(){
 		});
 		$('.jspScrollable').mouseleave(function(){
 			$('.jspDrag').stop(true, true).fadeOut('slow');
+		});
+		
+		$('.lesson_link').click(function(){
+			var lesson = $(this).attr('title');
+			$.post("ajax/load_lesson.php",{lessonName: lesson},function(result){
+				$('#right_content').html(result);
+			});
 		});
 
 	});

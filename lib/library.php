@@ -235,7 +235,13 @@
     if($db!=0){
       return $db;
     }
+<<<<<<< HEAD
     $qstr="SELECT * FROM ".$language." WHERE used='$old'";
+=======
+	$used = date('Y-m-d',strtotime('-'.$old.' days'));
+    $qstr="SELECT * FROM ".$language." WHERE used='$used'";
+	//echo $qstr;
+>>>>>>> 6c5e43a58202af63b80390a098f62dd6997b3b4d
     $downloadinfo=mysql_query($qstr);
     if(!isset($downloadinfo)){
       return "Error downloading word info";
@@ -294,7 +300,6 @@
 
   
   function get_languages(){
-  
 	$db=db_connect();
     if($db!=0){
       return $db;
@@ -302,7 +307,6 @@
 	$query = "select distinct(name) from languages";
 	$result = mysql_query($query);
 	return $result;
-  
   }
   
   
@@ -314,8 +318,20 @@
 	$word_id = mysql_real_escape_string($word_id);
 	$lang = mysql_real_escape_string($lang);
 	$user_id = mysql_real_escape_string($user_id);
-	$query = "insert ignore into history(user_id, word_id, lang) values($user_id, $word_id, '$lang') on duplicate unique key ignore";
+	$query = "insert ignore into history(user_id, word_id, lang) values($user_id, $word_id, '$lang')";
 	$result = mysql_query($query);
+  }
+  function is_learnt($word_id, $lang, $user_id){
+	$db=db_connect();
+    if($db!=0){
+      return $db;
+    }
+	$word_id = mysql_real_escape_string($word_id);
+	$lang = mysql_real_escape_string($lang);
+	$user_id = mysql_real_escape_string($user_id);
+	$query = "select id from history where user_id = $user_id and word_id = $word_id and lang = '$lang'";
+	$result = mysql_query($query);
+	return mysql_num_rows($result);
   }
   
 //This function gets the words from a lesson.
