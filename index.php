@@ -132,8 +132,8 @@ $app_name = idx($app_info, 'name', '');
 		
 		$('#change_language_btn').click(function(){
 			$.get('ajax/language.php', function(data) {
-				//  $.modal(data);
-				 alert('Load was performed.');
+				  $.modal(data);
+				// alert('Load was performed.');
 			});
 		
 		});
