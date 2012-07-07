@@ -16,6 +16,8 @@ body{background: url(../images/5.jpg) #082352;background-attachment:fixed;font-f
 		float:right;
 		margin-right: 13%;
 		box-shadow:0 0 2px #efefef;
+		-moz-box-shadow:0 0 2px #efefef;
+		-webkit-box-shadow:0 0 2px #efefef;
 	}
 #left_menu{
 	width:25%;
@@ -59,9 +61,13 @@ body{background: url(../images/5.jpg) #082352;background-attachment:fixed;font-f
 	border-top-right-radius: 5px; 
 	border-bottom-right-radius: 5px;
 	box-shadow: 2px 0 3px #245e7c;
+	-moz-box-shadow: 2px 0 3px #245e7c;
+	-webkit-box-shadow: 2px 0 3px #245e7c;
 }
 .link:hover{
 	box-shadow: 2px 0 3px #efefef;
+	-moz-box-shadow: 2px 0 3px #efefef;
+	-webkit-box-shadow: 2px 0 3px #efefef;
 	background: #efefef;
 	color: #222;
 }
