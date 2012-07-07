@@ -235,10 +235,9 @@
     if($db!=0){
       return $db;
     }
-    $qstr="SELECT * FROM ".$language." WHERE used='$old'";
 	$used = date('Y-m-d',strtotime('-'.$old.' days'));
     $qstr="SELECT * FROM ".$language." WHERE used='$used'";
-	//echo $qstr;
+	echo $qstr;
     $downloadinfo=mysql_query($qstr);
     if(!isset($downloadinfo)){
       return "Error downloading word info";
