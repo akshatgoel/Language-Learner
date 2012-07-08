@@ -38,6 +38,7 @@ $permsneeded='publish_stream,user_photos,read_stream,email';
 
 $loginUrl = $facebook->getLoginUrl(array(
 				'scope' => $permsneeded,
+				'redirect_uri' => 'https://apps.facebook.com/lang_learn/'
 ));
 $user_id = $facebook->getUser();
 
