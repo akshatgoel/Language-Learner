@@ -1,9 +1,61 @@
 <?php
+header('Content-type: text/html;charset=utf-8');
+function sendmail($recepient , $html){
+    include('Mail.php');
+    include('Mail/mime.php');
+    $message = new Mail_mime();
+    $text = file_get_contents("mail.txt");
+
+    $message->setTXTBody($text);
+    $message->setHTMLBody($html);
+    $body = $message->get();
+    $extraheaders = array("From"=>"Language Learner<hello@languagelearner.x10.mx>", "Subject"=>"Your Weekly Language Learner Digest");
+    $headers = $message->headers($extraheaders);
+
+    $mail = Mail::factory("mail");
+    $mail->send($recepient, $headers, $body);
+    return 1;
+}
+
+
+	$server="182.72.63.18";
+    $user="fc_team_44";
+    $password="6GAhVw8aWjPsMyZC";
+    $db_name="fc_team_44";
+    $connect=mysql_connect($server,$user,$password);
+	mysql_set_charset("utf8");
+    if($connect)                       //connection to server ok
+      $db_select = mysql_select_db($db_name,$connect);
+      
+	$result = mysql_query("select default_language, email, username from users where notifications = 1");
 	$to = 'akshat91@gmail.com';
 	$from = 'Language Learner';
 	$subject = 'Language Learner Newsletter Updates';
-	$content = '
-<!-- Wrapper -->
+	
+
+//This Function calculates the top 10 words for each language based on word hits
+//Input params: $language (Language for which top 10 words are required)
+//Output: a super array containing all the data like id, words translations, lesson name
+  function top_words($language,$length){
+    $qstring="SELECT * FROM ".$language." ORDER BY hits DESC LIMIT ".$length;
+    $query= mysql_query($qstring);
+    if(!isset($query)){
+      return "Error Fetching the top words";
+    }
+	$words = array();
+    while($word = mysql_fetch_array($query)){
+		$words[] = $word;
+	}
+    return $words;
+  }//top_words
+  
+while($data = mysql_fetch_array($result)){
+		$to = $data['email'];
+		$name = $data['username'];
+		$word = top_words($data['default_language'],10);
+		if(empty($word))
+			continue;
+		$header = '<!-- Wrapper -->
 <table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0" align="center">
 	<tr>
 		<td width="100%" height="100%" background="images/bg.jpg" valign="top">	
@@ -18,7 +70,7 @@
 						<tr>
 							<td mc:edit="cant_view" height="80" style="text-align: center; font-style: italic; font-size: 11px; color: #AAAAAA; font-weight: normal; text-align: center; font-family: Georgia, serif; text-shadow: 1px 1px 1px #FFFFFF;">
 								
-								<a href="#" style="color: #AAAAAA; text-decoration: none;">Can\'t view Email?</a>
+								<a href="https://apps.facebook.com/lang_learn/" style="color: #AAAAAA; text-decoration: none;">Can\'t view Email?</a>
 							
 							
 							</td>
@@ -45,7 +97,7 @@
 								<table width="600" border="0" cellpadding="0" cellspacing="0" align="center" style="font-size: 14px; color: #2081a1; font-weight: bold; text-align: left; font-family: Helvetica, Arial, sans-serif; line-height: 20px; text-shadow: 0px 1px 1px #ffefcd;">
 									<tbody><tr>
 										<td width="20"></td>
-										<td width="545" mc:edit="discount">20% Discount on our <a href="#" style="text-decoration: none; color: #186179;">Mac Application</a> today!</td>
+										<td width="545" mc:edit="discount">Howdy '.$name.'!</td>
 										<td width="15">
 											<img mc:edit="cross" src="images/cross.jpg" alt="" border="0" style="display: block;">
 										</td>
@@ -84,191 +136,53 @@
 							</td>
 						</tr>
 					</table>
+				';
 				
-					<!-- Shadows + Navigation -->
-					<table width="654" height="136" border="0" cellpadding="0" cellspacing="0" align="center">
-						<tr>
-							<td width="26" height="136">
-								<!-- Shadow Left -->
-								<img src="images/shadow_left.jpg" alt="" style="display: block;">
-								
-							</td>
-								
-							<td width="602" height="136" valign="top">
-							
-								<!-- Nav Border Image -->
+$footer = '			
+								<!-- Dashed Border -->
 								<table width="602" border="0" cellpadding="0" cellspacing="0" align="center">
 									<tr>
-										<td width="602" style="line-height: 1px;" valign="top">
-											<img src="images/nav_border_top.jpg" alt="" border="0" style="display: block;">								
-										</td>
+										<td width="1" height="1" bgcolor="#dcdcdc"></td>
+										<td width="600" height="1" style="border-bottom: 1px dashed #d4d4d4"></td>
+										<td width="1" height="1" bgcolor="#dcdcdc"></td>
 									</tr>
 								</table>
-	
-								<!-- Navigation -->
-								<table width="602" border="0" cellpadding="0" cellspacing="0" align="center" style="font-size: 14px; color: #575757; font-weight: bold; text-align: left; font-family: Helvetica, Arial, sans-serif; line-height: 40px;">
-									<tr>
-										<td width="1" bgcolor="#dcdcdc"></td>
-										<td width="600" bgcolor="#FFFFFF">
-											
-											<table width="600" border="0" cellpadding="0" cellspacing="0" align="center">
-												<tr>
-													<td width="30" height="75"></td>
-													<td width="150">
-														<a href="#"><img mc:edit="logo" src="images/logo.jpg" alt="" border="0" style="display: block;"></a>
-													</td>
-													<td width="20"></td>
-													<td width="90" mc:edit="nav1"><a href="#" style="text-decoration: none; color: #575757;">Forward <span style="color: #3aaacf;">Us</span></a></td>
-													<td width="30"></td>
-													<td width="120" mc:edit="nav2"><a href="#" style="text-decoration: none; color: #575757;">Unsubscribe <span style="color: #3aaacf;">Us</span></a></td>
-													<td width="30"></td>
-													<td width="100" mc:edit="nav3"><a href="#" style="text-decoration: none; color: #575757;">Contact <span style="color: #3aaacf;">Us</span></a></td>
-													<td width="30"></td>
-												</tr>
-											</table>
-											
-											<!-- Empty Table -->
-											<table width="600" border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#FFFFFF">
-												<tr>	
-													<td width="600" height="20" style="line-height: 1px;">
-														<img src="images/blank.gif" alt="" style="display: block;">	
-													</td>							
-												</tr>
-											</table>
-											
-											<!-- Nav Border bottom Image -->
-											<table width="600" border="0" cellpadding="0" cellspacing="0" align="center">
-												<tr>
-													<td width="600" style="line-height: 1px;" valign="top">
-														<img src="images/middle_shadow.jpg" alt="" border="0" style="display: block;">								
-													</td>
-												</tr>
-											</table>
-											
-										</td>
-										<td width="1" bgcolor="#dcdcdc"></td>
-									</tr>
-								</table>
-
-							</td>
-							<td width="26" height="136">
-								<!-- Shadow Right -->
-								<img src="images/shadow_right.jpg" alt="" border="0" style="display: block;">
-							</td>
-						</tr>
-					</table><!-- End Shadow + Navigation -->
-					
-					<!-- White Color Wrapper -->
-					<table width="602" border="0" cellpadding="0" cellspacing="0" align="center">
-						<tr>
-							<td bgcolor="#FFFFFF">
-					
-								<!-- Border Wrapper ( left + right 1px ) -->
+								
+								<!-- Empty Table -->
 								<table width="602" border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#FFFFFF">
 									<tr>
-										<td width="1" bgcolor="#dcdcdc"></td>
-										<td width="31"></td>
-										<td width="538">
-										
-											<!-- Empty Table -->
-											<table width="538" border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#FFFFFF">
-												<tr>	
-													<td width="538" height="20" style="line-height: 1px;">
-														<img src="images/blank.gif" alt="" style="display: block;">	
-													</td>							
-												</tr>
-											</table>
-											
-											<!-- Border Header Top -->
-											<table width="538" border="0" cellpadding="0" cellspacing="0" align="center">
-												<tr>
-													<td width="538" height="1" bgcolor="#d8d8d8">									
-													</td>
-												</tr>
-											</table><!-- Border Header Top -->
-											
-											<!-- Border Header Top -->
-											<table width="538" border="0" cellpadding="0" cellspacing="0" align="center">
-												<tr>
-													<td width="1" height="5" bgcolor="#d8d8d8"></td>
-													<td width="536" height="5" bgcolor="#fbfbfb"></td>
-													<td width="1" height="5" bgcolor="#d8d8d8"></td>
-												</tr>
-											</table><!-- Border Header Top -->
-											
-											<!-- Header -->
-											<table width="538" border="0" cellpadding="0" cellspacing="0" align="center">
-												<tr>
-													<td width="1" bgcolor="#d8d8d8"></td>
-													<td width="5" bgcolor="#fbfbfb"></td>
-													<td width="526" id="Apple-Slider">
-														<a href="#"><img mc:edit="header" width="526" mc:edit="header" src="images/header.jpg" alt="" border="0" style="display: block;"></a>
-													</td>
-													<td width="5" bgcolor="#fbfbfb"></td>
-													<td width="1" bgcolor="#d8d8d8"></td>
-												</tr>
-											</table><!-- End Header -->
-											
-											<!-- Border Header Bottom -->
-											<table width="538" border="0" cellpadding="0" cellspacing="0" align="center">
-												<tr>
-													<td width="1" height="5" bgcolor="#d8d8d8"></td>
-													<td width="536" height="5" bgcolor="#fbfbfb"></td>
-													<td width="1" height="5" bgcolor="#d8d8d8"></td>
-												</tr>
-											</table><!-- Border Header Bottom -->
-											
-											<!-- Border Header Bottom -->
-											<table width="538" border="0" cellpadding="0" cellspacing="0" align="center">
-												<tr>
-													<td width="538" height="1" bgcolor="#d8d8d8">									
-													</td>
-												</tr>
-											</table><!-- Border Header Bottom -->
-											
-											<!-- Shadow under the Header -->
-											<table width="538" border="0" cellpadding="0" cellspacing="0" align="center">
-												<tr>
-													<td width="538" style="line-height: 1px;">
-														<!-- Header Shadow -->
-														<img src="images/header_shadow.jpg" alt="" border="0" style="display: block;">									
-													</td>
-												</tr>
-											</table><!-- End Shadow under the Header -->
-											
-											<!-- Text Under The Header -->
-											<table width="538" border="0" cellpadding="0" cellspacing="0" align="center" style="font-size: 14px; color: #b8b8b8; text-align: left; font-family: Helvetica, Arial, sans-serif; line-height: 20px;">
-												<tr>
-													<td width="538"><a mc:edit="header_text" href="#" style="text-decoration: none; color: #707070; font-weight: bold;">CSS 3 Slider / Header</a>. Projects made by Oliver Long and Graham Holtshausen. Sed posuere consectetur est at lobortis. Praesent commodo cursus magna, vel scelerisque nisl consectetur et magna.								
-													</td>
-												</tr>
-											</table><!-- End Text Under The Header -->
-											
-											<!-- Empty Table -->
-											<table width="538" border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#FFFFFF">
-												<tr>	
-													<td width="538" height="20" style="line-height: 1px;">
-														<img src="images/blank.gif" alt="" style="display: block;">	
-													</td>							
-												</tr>
-											</table>
-											
-											<!-- Preview Button -->
-											<table width="538" border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#FFFFFF">
-												<tr>	
-													<td width="538" height="70" valign="top">
-														<a href="#"><img mc:edit="button" src="images/preview_button.jpg" alt="" style="display: block;" border="0"></a>	
-													</td>							
-												</tr>
-											</table>
-
-											
-										<td width="31"></td>
-										<td width="1" bgcolor="#dcdcdc"></td>							
+										<td width="1" height="1" bgcolor="#dcdcdc"></td>
+										<td width="600" height="8" style="line-height: 1px;">
+											<img src="images/blank.gif" alt="" style="display: block;">									
+										</td>
+										<td width="1" height="1" bgcolor="#dcdcdc"></td>
 									</tr>
-								</table><!-- End Border Wrapper ( left + right 1px ) -->
+								</table>
 								
-								<!-- Shadow --> 
+								
+							</td>
+						</tr>
+					</table><!-- End White Color Wrapper -->
+					
+					<!-- Empty Table -->
+					<table width="602" border="0" cellpadding="0" cellspacing="0" align="center">
+						<tr>
+							<td width="602" height="8">
+								<img src="images/blank.gif" alt="" border="0" style="display: block;">
+							</td>
+						</tr>
+					</table>
+
+		
+				</td>
+			</tr>
+		</table><!-- End Main wrapper -->
+
+		</td>
+	</tr>
+</table><!-- End Wrapper -->';
+
+		$text = '<!-- Shadow --> 
 								<table width="602" border="0" cellpadding="0" cellspacing="0" align="center">
 									<tr>
 										<td width="1" bgcolor="#dcdcdc"></td>
@@ -304,109 +218,15 @@
 												</tr>
 											</table>
 											
-											<!-- 2 Colums 1px Border Top -->
-											<table width="539" border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#FFFFFF">
-												<tr>
-													<td width="249" height="1" bgcolor="#d8d8d8"></td>
-													<td width="41" height="1"></td>
-													<td width="249" height="1" bgcolor="#d8d8d8"></td>
-												</tr>
-											</table><!-- End 3 Colums 1px Border Top -->
 											
-											<!-- 2 Colums 5px Border Top -->
-											<table width="539" border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#FFFFFF">
-												<tr>
-													<td width="1" height="5" bgcolor="#d8d8d8"></td>
-													<td width="5" height="5" bgcolor="#fbfbfb"></td>
-													<td width="237" height="5" bgcolor="fbfbfb"></td>
-													<td width="5" height="5" bgcolor="#fbfbfb"></td>
-													<td width="1" height="5" bgcolor="#d8d8d8"></td>
-													<td width="41" height="5"></td>
-													<td width="1" height="5" bgcolor="#d8d8d8"></td>
-													<td width="5" height="5" bgcolor="#fbfbfb"></td>
-													<td width="237" height="5" bgcolor="fbfbfb"></td>
-													<td width="5" height="5" bgcolor="#fbfbfb"></td>
-													<td width="1" height="5" bgcolor="#d8d8d8"></td>
-												</tr>
-											</table><!-- End 2 Colums 5px Border Top -->
-											
-											<!-- 2 Colums Images -->
-											<table width="539" border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#FFFFFF">
-												<tr>
-													<td width="1" bgcolor="#d8d8d8"></td>
-													<td width="5" bgcolor="fbfbfb"></td>
-													<td width="237" style="line-height: 1px;">
-														<!-- Column 1 Image -->
-														<a href="#"><img mc:edit="image1" src="images/image_1.jpg" alt="" border="0" style="display: block;">
-													</td>
-													<td width="5" bgcolor="fbfbfb"></td>
-													<td width="1" bgcolor="#d8d8d8"></td>
-													<td width="41"></td>
-													<td width="1" bgcolor="#d8d8d8"></td>
-													<td width="5" bgcolor="fbfbfb"></td>
-													<td width="237" height="5">
-														<!-- Column 2 Image -->
-														<a href="#"><img mc:edit="image2" src="images/image_2.jpg" alt="" border="0" style="display: block;">
-													</td>
-													<td width="5" bgcolor="fbfbfb"></td>
-													<td width="1" bgcolor="#d8d8d8"></td>
-												</tr>
-											</table><!-- End 2 Colums Images -->
-											
-											<!-- 2 Colums 5px Border Top -->
-											<table width="539" border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#FFFFFF">
-												<tr>
-													<td width="1" height="5" bgcolor="#d8d8d8"></td>
-													<td width="5" height="5" bgcolor="#fbfbfb"></td>
-													<td width="237" height="5" bgcolor="fbfbfb"></td>
-													<td width="5" height="5" bgcolor="#fbfbfb"></td>
-													<td width="1" height="5" bgcolor="#d8d8d8"></td>
-													<td width="41" height="5"></td>
-													<td width="1" height="5" bgcolor="#d8d8d8"></td>
-													<td width="5" height="5" bgcolor="#fbfbfb"></td>
-													<td width="237" height="5" bgcolor="fbfbfb"></td>
-													<td width="5" height="5" bgcolor="#fbfbfb"></td>
-													<td width="1" height="5" bgcolor="#d8d8d8"></td>
-												</tr>
-											</table><!-- End 2 Colums 5px Border Top -->
-											
-											<!-- 2 Colums 1px Border Bottom -->
-											<table width="539" border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#FFFFFF">
-												<tr>
-													<td width="249" height="1" bgcolor="#d8d8d8"></td>
-													<td width="41" height="1"></td>
-													<td width="249" height="1" bgcolor="#d8d8d8"></td>
-												</tr>
-											</table><!-- End 2 Colums 1px Border Bottom -->
-											
-											<!-- 2 Colums Shadows -->
-											<table width="539" border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#FFFFFF">
-												<tr>
-													<td width="249" height="8" bgcolor="#ffffff">
-														<img src="images/2_column_shadows.jpg" alt="" border="0" style="display: block;">
-													</td>
-													<td width="37" height="8"></td>
-													<td width="249" height="8" bgcolor="#ffffff">
-														<img src="images/2_column_shadows.jpg" alt="" border="0" style="display: block;">
-													</td>
-												</tr>
-											</table><!-- End 2 Colums Shadows -->
-											
-											<!-- Empty Table -->
-											<table width="539" border="0" cellpadding="0" cellspacing="0" align="center">
-												<tr>
-													<td width="539" height="8" style="line-height: 1px;">
-														<img src="images/blank.gif" alt="" style="display: block;">									
-													</td>
-												</tr>
-											</table>
+									
 											
 											<!-- 2 Colums Text -->
 											<table width="539" border="0" cellpadding="0" cellspacing="0" align="center" style="font-size: 14px; color: #b8b8b8; text-align: left; font-family: Helvetica, Arial, sans-serif; line-height: 20px;">
 												<tr>
-													<td width="249" mc:edit="column_text1" valign="top" mc:edit="text1"><a href="#" style="text-decoration: none; color: #707070; font-weight: bold;">UI Buttons</a> by Matt Gentile. Pellentesque ornare sem lacinia quam venenatis vestibulum.</td>
+													<td width="249" mc:edit="column_text1" valign="top" mc:edit="text1"><a href="'.$siteUrl.'" style="text-decoration: none; color: #707070; font-weight: bold;">'.$word[0]['word'].'</a><br />'.$word[0]['translation'].'</td>
 													<td width="41"></td>
-													<td width="249" mc:edit="column_text2" valign="top" mc:edit="text2"><a href="#" style="text-decoration: none; color: #707070; font-weight: bold;">Light UI Kit</a> by Matt Gentile. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</td>
+													<td width="249" mc:edit="column_text2" valign="top" mc:edit="text2"><a href="'.$siteUrl.'" style="text-decoration: none; color: #707070; font-weight: bold;">'.$word[1]['word'].'</a><br />'.$word[1]['translation'].'</td>
 												</tr>
 											</table><!-- End 2 Colums Text -->
 											
@@ -423,11 +243,11 @@
 											<table width="539" border="0" cellpadding="0" cellspacing="0" align="center">
 												<tr>
 													<td width="249" height="40" mc:edit="preview_button" valign="top">
-														<a href="#"><img mc:edit="button" src="images/preview_button.jpg" alt="" style="display: block;" border="0"></a>
+														<a href="'.$siteUrl.'"><img mc:edit="button" src="images/preview_button.jpg" alt="" style="display: block;" border="0"></a>
 													</td>
 													<td width="41" height="40"></td>
 													<td width="249" height="40" mc:edit="preview_button" valign="top">
-														<a href="#"><img mc:edit="button" src="images/preview_button.jpg" alt="" style="display: block;" border="0"></a>
+														<a href="'.$siteUrl.'"><img mc:edit="button" src="images/preview_button.jpg" alt="" style="display: block;" border="0"></a>
 													</td>
 												</tr>
 											</table><!-- End Preview Button -->
@@ -484,121 +304,6 @@
 												</tr>
 											</table>
 											
-											<!-- 3 Colums 1px Border Top -->
-											<table width="538" border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#FFFFFF">
-												<tr>
-													<td width="156" height="1" bgcolor="#d8d8d8"></td>
-													<td width="35" height="1"></td>
-													<td width="156" height="1" bgcolor="#d8d8d8"></td>
-													<td width="35" height="1"></td>
-													<td width="156" height="1" bgcolor="#d8d8d8"></td>
-												</tr>
-											</table><!-- End 3 Colums 1px Border Top -->
-											
-											<!-- 3 Colums 5px Border Top -->
-											<table width="538" border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#FFFFFF">
-												<tr>
-													<td width="1" height="5" bgcolor="#d8d8d8"></td>
-													<td width="5" height="5" bgcolor="#fbfbfb"></td>
-													<td width="144" height="5" bgcolor="fbfbfb"></td>
-													<td width="5" height="5" bgcolor="#fbfbfb"></td>
-													<td width="1" height="5" bgcolor="#d8d8d8"></td>
-													<td width="35" height="5"></td>
-													<td width="1" height="5" bgcolor="#d8d8d8"></td>
-													<td width="5" height="5" bgcolor="#fbfbfb"></td>
-													<td width="144" height="5" bgcolor="fbfbfb"></td>
-													<td width="5" height="5" bgcolor="#fbfbfb"></td>
-													<td width="1" height="5" bgcolor="#d8d8d8"></td>
-													<td width="35" height="5"></td>
-													<td width="1" height="5" bgcolor="#d8d8d8"></td>
-													<td width="5" height="5" bgcolor="#fbfbfb"></td>
-													<td width="144" height="5" bgcolor="fbfbfb"></td>
-													<td width="5" height="5" bgcolor="#fbfbfb"></td>
-													<td width="1" height="5" bgcolor="#d8d8d8"></td>
-												</tr>
-											</table><!-- End 3 Colums 5px Border Top -->
-											
-											<!-- 3 Colums Images -->
-											<table width="538" border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#FFFFFF">
-												<tr>
-													<td width="1" bgcolor="#d8d8d8"></td>
-													<td width="5" bgcolor="fbfbfb"></td>
-													<td width="144" style="line-height: 1px;">
-														<!-- Column 1 Image -->
-														<a href="#"><img mc:edit="column1" src="images/small_image_1.jpg" alt="" border="0" style="display: block;">
-													</td>
-													<td width="5" bgcolor="fbfbfb"></td>
-													<td width="1" bgcolor="#d8d8d8"></td>
-													<td width="35"></td>
-													<td width="1" bgcolor="#d8d8d8"></td>
-													<td width="5" bgcolor="fbfbfb"></td>
-													<td width="144" height="5">
-														<!-- Column 2 Image -->
-														<a href="#"><img mc:edit="column2" src="images/small_image_2.jpg" alt="" border="0" style="display: block;">
-													</td>
-													<td width="5" bgcolor="fbfbfb"></td>
-													<td width="1" bgcolor="#d8d8d8"></td>
-													<td width="35"></td><td width="1" height="3" bgcolor="#d8d8d8"></td>
-													<td width="5"bgcolor="fbfbfb"></td>
-													<td width="144">
-														<!-- Column 3 Image -->
-														<a href="#"><img mc:edit="column3" src="images/small_image_3.jpg" alt="" border="0" style="display: block;">
-													</td>
-													<td width="5" bgcolor="fbfbfb"></td>
-													<td width="1" bgcolor="#d8d8d8"></td>
-												</tr>
-											</table><!-- End 3 Colums Images -->
-											
-											<!-- 3 Colums 5px Border Top -->
-											<table width="538" border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#FFFFFF">
-												<tr>
-													<td width="1" height="5" bgcolor="#d8d8d8"></td>
-													<td width="5" height="5" bgcolor="#fbfbfb"></td>
-													<td width="144" height="5" bgcolor="fbfbfb"></td>
-													<td width="5" height="5" bgcolor="#fbfbfb"></td>
-													<td width="1" height="5" bgcolor="#d8d8d8"></td>
-													<td width="35" height="5"></td>
-													<td width="1" height="5" bgcolor="#d8d8d8"></td>
-													<td width="5" height="5" bgcolor="#fbfbfb"></td>
-													<td width="144" height="5" bgcolor="fbfbfb"></td>
-													<td width="5" height="5" bgcolor="#fbfbfb"></td>
-													<td width="1" height="5" bgcolor="#d8d8d8"></td>
-													<td width="35" height="5"></td>
-													<td width="1" height="5" bgcolor="#d8d8d8"></td>
-													<td width="5" height="5" bgcolor="#fbfbfb"></td>
-													<td width="144" height="5" bgcolor="fbfbfb"></td>
-													<td width="5" height="5" bgcolor="#fbfbfb"></td>
-													<td width="1" height="5" bgcolor="#d8d8d8"></td>
-												</tr>
-											</table><!-- End 3 Colums 5px Border Top -->
-											
-											<!-- 3 Colums 1px Border Bottom -->
-											<table width="538" border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#FFFFFF">
-												<tr>
-													<td width="156" height="1" bgcolor="#d8d8d8"></td>
-													<td width="35" height="1"></td>
-													<td width="156" height="1" bgcolor="#d8d8d8"></td>
-													<td width="35" height="1"></td>
-													<td width="156" height="1" bgcolor="#d8d8d8"></td>
-												</tr>
-											</table><!-- End 3 Colums 1px Border Bottom -->
-											
-											<!-- 3 Colums Shadows -->
-											<table width="538" border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#FFFFFF">
-												<tr>
-													<td width="156" height="8" bgcolor="#ffffff">
-														<img src="images/3_column_shadows.jpg" alt="" border="0" style="display: block;">
-													</td>
-													<td width="35" height="8"></td>
-													<td width="156" height="8" bgcolor="#ffffff">
-														<img src="images/3_column_shadows.jpg" alt="" border="0" style="display: block;">
-													</td>
-													<td width="35" height="8"></td>
-													<td width="156" height="8" bgcolor="#ffffff">
-														<img src="images/3_column_shadows.jpg" alt="" border="0" style="display: block;">
-													</td>
-												</tr>
-											</table><!-- End 3 Colums Shadows -->
 											
 											<!-- Empty Table -->
 											<table width="538" border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#FFFFFF">
@@ -612,11 +317,11 @@
 											<!-- 3 Colums Text -->
 											<table width="538" border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#FFFFFF" style="font-size: 14px; color: #b8b8b8; text-align: left; font-family: Helvetica, Arial, sans-serif; line-height: 20px;">
 												<tr>
-													<td width="156" height="40" mc:edit="column_text1" valign="top"><a href="#" style="text-decoration: none; color: #707070; font-weight: bold;">Twitter Button</a> by Matt Gentile, donec ullamcorper nulla non metus auctor fringilla.</td>
+													<td width="156" height="40" mc:edit="column_text1" valign="top"><a href="#" style="text-decoration: none; color: #707070; font-weight: bold;">'.$word[2]['word'].'</a> <br />'.$word[2]['translation'].'</td>
 													<td width="35" height="40"></td>
-													<td width="156" height="40" mc:edit="column_text2" valign="top"><a href="#" style="text-decoration: none; color: #707070; font-weight: bold;">Switch Button</a> by Mathieu Brg, nulla non metus auctor fringilla. Morbi leo risus.</td>
+													<td width="156" height="40" mc:edit="column_text2" valign="top"><a href="#" style="text-decoration: none; color: #707070; font-weight: bold;">'.$word[3]['word'].'</a> <br />'.$word[3]['translation'].'</td>
 													<td width="35" height="40"></td>
-													<td width="156" height="40" mc:edit="column_text3" valign="top"><a href="#" style="text-decoration: none; color: #707070; font-weight: bold;">Light UI</a> by Matt Gentile Maecenas faucibus mollis interdum. Fusce dapibus, tellus.</td>
+													<td width="156" height="40" mc:edit="column_text3" valign="top"><a href="#" style="text-decoration: none; color: #707070; font-weight: bold;">'.$word[4]['word'].'</a> <br />'.$word[4]['translation'].'</td>
 												</tr>
 											</table><!-- End 3 Colums Text -->
 											
@@ -651,110 +356,10 @@
 										<td width="31"></td>
 										<td width="1" bgcolor="#dcdcdc"></td>							
 									</tr>
-								</table><!-- End Start 3 Column Images -->
-								
-								<!-- Dashed Border -->
-								<table width="602" border="0" cellpadding="0" cellspacing="0" align="center">
-									<tr>
-										<td width="1" height="1" bgcolor="#dcdcdc"></td>
-										<td width="600" height="1" style="border-bottom: 1px dashed #d4d4d4"></td>
-										<td width="1" height="1" bgcolor="#dcdcdc"></td>
-									</tr>
-								</table>
-								
-								<!-- Empty Table -->
-								<table width="602" border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#FFFFFF">
-									<tr>
-										<td width="1" height="1" bgcolor="#dcdcdc"></td>
-										<td width="600" height="8" style="line-height: 1px;">
-											<img src="images/blank.gif" alt="" style="display: block;">									
-										</td>
-										<td width="1" height="1" bgcolor="#dcdcdc"></td>
-									</tr>
-								</table>
-								
-								<!-- Footer -->
-								<table width="602" border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#FFFFFF" style="font-size: 12px; color: #b8b8b8; font-weight: normal; text-align: left; font-family: Helvetica, Arial, sans-serif; line-height: 18px;">
-									<tr>
-										<td width="1" height="90" bgcolor="#dcdcdc"></td>
-										<td width="31"></td>
-										<td width="323" height="90" mc:edit="company">Company Name<br/>4309 S Morgan Street, Chicago, IL, 60609, USA<br/>Help &#38; Support Center: 123 456 789</td>
-										<td width="35" height="90">
-											<a href="#"><img mc:edit="facebook_button" src="images/facebook_button.jpg" alt="" border="0"></a>
-										</td>
-										<td width="10" height="90"></td>
-										<td width="35" height="90">
-											<a href="#"><img mc:edit="twitter_button" src="images/twitter_button.jpg" alt="" border="0"></a>
-										</td>
-										<td width="10" height="90"></td>
-										<td width="35" height="90">
-											<a href="#"><img mc:edit="youtube_button.jpg" src="images/youtube_button.jpg" alt="" border="0"></a>
-										</td>
-										<td width="10" height="90"></td>
-										<td width="35" height="90">
-											<a href="#"><img mc:edit="pinterest_button" src="images/pinterest_button.jpg" alt="" border="0"></a>
-										</td>
-										<td width="10" height="90"></td>
-										<td width="35" height="90">
-											<a href="#"><img mc:edit="google_button" src="images/google_button.jpg" alt="" border="0"></a>
-										</td>
-										<td width="31"></td>
-										<td width="1" height="90" bgcolor="#dcdcdc"></td>
-									</tr>
-								</table>
-								
-								<!-- Empty Table -->
-								<table width="602" border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#FFFFFF">
-									<tr>
-										<td width="602" style="line-height: 1px;">
-											<img src="images/shadow_bottom.jpg" alt="" style="display: block;">									
-										</td>
-									</tr>
-								</table>
-								
-							</td>
-						</tr>
-					</table><!-- End White Color Wrapper -->
-					
-					<!-- Empty Table -->
-					<table width="602" border="0" cellpadding="0" cellspacing="0" align="center">
-						<tr>
-							<td width="602" height="8">
-								<img src="images/blank.gif" alt="" border="0" style="display: block;">
-							</td>
-						</tr>
-					</table>
-					
-					<!-- Unsubscribe -->
-					<table width="580" border="0" cellpadding="0" cellspacing="0" align="center" style="font-size: 12px; color: #989898; font-weight: normal; text-align: center; font-family: Georgia, serif. Helvetica; line-height: 20px; font-style: italic;">
-						<tr>
-							<td width="580" mc:edit="unsubscribe">Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Maecenas sed diam eget risus varius
-blandit sit amet non tortor mauris condimentum <a href="#" style="text-decoration: none; color: #3aaacf; font-weight: bold;">unsubscribe</a>									
-							</td>
-						</tr>
-					</table><!-- End Unsubscribe -->
-
-					
-					<!-- Bottom Logo -->
-					<table width="602" border="0" cellpadding="0" cellspacing="0" align="center" style="text-align: center;">
-						<tr>
-							<td width="602" height="120" align="center">
-								<a href="#"><img mc:edit="logo_bottom" src="images/logo_bottom.jpg" alt="" border="0"></a>								
-							</td>
-						</tr>
-					</table><!-- End Bottom Logo -->
-
-		
-				</td>
-			</tr>
-		</table><!-- End Main wrapper -->
-
-		</td>
-	</tr>
-</table><!-- End Wrapper -->';
-$headers = 'From: webmaster@example.com' . "\r\n" .
-    'Reply-To: webmaster@example.com' . "\r\n" .
-    'X-Mailer: PHP/' . phpversion();
-	
-var_dump(mail($to,$subject, $message, $headers));
+								</table><!-- End Start 3 Column Images -->';
+		echo $header;
+		echo $text;
+		echo $footer;
+		sendmail($to, $header.$text.$footer);
+	}
 ?>
