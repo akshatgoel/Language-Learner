@@ -364,8 +364,8 @@
     return $arr;
   }//get_notify_users
   
-  function get_mailer_words($data['default_language']){
-		$word = top_words($data['default_language'],10);
+  function get_mailer_words($data){
+		$word = top_words($data,10);
 		if(empty($word))
 			continue;
 		$header = '<!-- Wrapper -->
