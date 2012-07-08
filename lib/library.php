@@ -381,6 +381,19 @@
     return $new_rep;
   }//rep_adder
 
+  //This function gets the rep points of user's account
+//Input params: $id (user's primary id)
+  function rep_getter($id){
+    $db=db_connect();
+    if($db!=0){
+      return $db;
+    }
+    $query=mysql_query("SELECT rep FROM users WHERE id='$id'");
+    $row=mysql_fetch_assoc($query);
+    $current=$row['rep'];
+    return $current;
+  }//rep_getter
+  
 //This function adds the rep points to user's account
 //Input params: $id (user's primary id), $points (number of rep points awarded)
   function rep_update($id,$points){

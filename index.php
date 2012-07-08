@@ -184,13 +184,10 @@ $app_name = idx($app_info, 'name', '');
 		<div id="wrapper" >
 			<div id="top_bar">
 				<a href="javascript:void(0);" style="text-decoration:none;" id="change_language_btn"><span class="link" style="padding: 20px;">Change Language (<?php echo ucwords($_SESSION['user']['user_language']); ?>) </span></a>
-				<form method="post" action="actions/search.php" id="search_form" style="margin-top:-15px;">
-					<input type="submit" value="search" style="width: 100px;margin-right: 14%;cursor:pointer;margin-left:7px;padding-top:7px;padding-bottom:9px;">
-					<input type="text" value="Search word" name="search" class="em text_box">
-				</form>
+				<img src="https://graph.facebook.com/me/picture?access_token=<?php echo $facebook->getAccesstoken(); ?>" style="margin-bottom:20px;float:right;margin-right:14%;"/>
 			</div>
 			<div class="fl" id="left_menu">
-				<img src="images/logo.png" title="Logo" style="margin-left:20px;"/>
+			<img src="images/logo.png" title="Logo"  style="margin-left: 30px;"/>
 <br />
 <br />
 				<ul>
