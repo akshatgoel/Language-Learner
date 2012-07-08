@@ -48,10 +48,7 @@ function sendmail($recepient , $html){
 	}
     return $words;
   }//top_words
-  
-while($data = mysql_fetch_array($result)){
-		$to = $data['email'];
-		$name = $data['username'];
+  function get_mailer_words($data['default_language']){
 		$word = top_words($data['default_language'],10);
 		if(empty($word))
 			continue;
@@ -357,9 +354,6 @@ $footer = '
 										<td width="1" bgcolor="#dcdcdc"></td>							
 									</tr>
 								</table><!-- End Start 3 Column Images -->';
-		echo $header;
-		echo $text;
-		echo $footer;
-		sendmail($to, $header.$text.$footer);
+		return $header.$text.$footer;
 	}
 ?>

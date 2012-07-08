@@ -348,6 +348,23 @@
 	return mysql_num_rows($result);
   }
   
+  //This function gets all users who has email notifications enabled
+//Input params: $lang (user's default language)
+  function get_notify_users($lang){
+    $db=db_connect();
+    if($db!=0){
+      return $db();
+    }
+    $query=mysql_query("SELECT email FROM users WHERE default_language='$lang' AND notifications=1");
+    $rows=mysql_num_rows($query);
+    $arr=array();
+    for($i=0;$i<$rows;$i++){
+      $arr[$i]=mysql_result($query,$i);
+    }
+    return $arr;
+  }//get_notify_users
+  
+  
 //This function gets the words from a lesson.
 //Input params: $language (Word language), $lesson (Name of the lesson)
   function get_words($language,$lesson){
