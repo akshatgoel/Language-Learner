@@ -62,7 +62,7 @@ $(document).ready(function(){
 			btn.removeClass('learn_btn');
 			btn.addClass('unlearn_btn');
 			FB.api('/me/lang_learn:learn', 'post', 
-			{ word : 'http://www.example.com/pumpkinpie.html' });
+			{ word : lang_learn:word });
 		});
 		$('.unlearn_btn').live('click',function(){
 			var word_id = $(this).attr('id').substring(4);
