@@ -340,6 +340,7 @@
 	$lang = mysql_real_escape_string($lang);
 	$user_id = mysql_real_escape_string($user_id);
 	$query = "select id from history where user_id = $user_id and word_id = $word_id and lang = '$lang'";
+	//echo $query;
 	$result = mysql_query($query);
 	return mysql_num_rows($result);
   }

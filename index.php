@@ -63,6 +63,7 @@ if ($me){
 	else{
 		update_user($fb_id, $access, $name, $email);
 		if(empty($_SESSION['user']['user_language'])){
+			$_SESSION['user'] = $app_user;
 			$_SESSION['user']['user_language'] = $app_user['default_language'];
 		}
 	}
