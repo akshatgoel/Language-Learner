@@ -94,7 +94,8 @@ $(document).ready(function(){
 			$.get("actions/update_notify.php?rnd="+Math.random(),function(result){
 				$('#overlay').hide();
 				if(result == "1"){
-					switch(btn.html()){
+				//alert(btn.html().trim());
+					switch(btn.html().trim()){
 						case 'No' : btn.html('Yes');
 									break;
 						case 'Yes' : btn.html('No');

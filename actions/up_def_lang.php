@@ -5,5 +5,5 @@
 	$_SESSION['user']['default_language'] = $_POST['lang'];
 	$user_id = $_SESSION['user']['id'];
 	echo change_default_lang($user_id,$_POST['lang']);
-	update_def_language_beacon($user_id, $lang);
+	update_def_language_beacon($user_id, $_POST['lang']);
 ?>

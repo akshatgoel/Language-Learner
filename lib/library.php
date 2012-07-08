@@ -118,7 +118,10 @@
     
       $db=db_connect();
       if($db==0){
-            $change_mail_notify=mysql_query("UPDATE users SET notifications=!notifications WHERE id='$id'");
+			$query = "UPDATE users SET notifications= NOT notifications WHERE id='$id'";
+            $change_mail_notify=mysql_query($query);
+			//echo $query;
+			//die;
 			return 1;
         }
         else{
@@ -418,6 +421,94 @@
 
   }//change_default_lang
 
+  
+  //This function checks if the user is eligible for taking the test ot not
+//Input Params: $id (user's primary id) $lang ($language)
+  function test_eligible($id,$lang){
+    $db=db_connect();
+    if($db!=0){
+      return $db;
+    }
+    $query=mysql_query("SELECT word_id FROM history WHERE user_id='$id' AND lang='$lang' AND flag=0 ORDER BY rand() LIMIT 10");
+    $words_num=mysql_num_rows($query);
+    if($words_num<10){
+      return "You haven't learnt enough words to take a test in this language, learn more words or try other languages";
+    }
+    $id_list=array();
+    while($row=mysql_fetch_assoc($query)){
+      $id_list[]=$row['word_id'];
+    }
+    //return $id_list;
+    $arr=array();
+    for($i=0;$i<10;$i++){
+      $u=$id_list[$i];
+      $getwords="SELECT id,word,translation FROM ".$lang." WHERE id='$u'";
+      $runquery=mysql_query($getwords);
+      $words = array();
+      while($word = mysql_fetch_array($runquery)){
+        $words[] = $word;
+        $arr[$i]=$words;
+      }
+    }
+    return $arr;
+  }//test_eligible
+
+
+//This function generates options for the questions in a test
+//Input params: $id (id of the word), $diff ($difficulty level)
+  function test_generate($id,$lang,$diff){
+    $db=db_connect();
+    if($db!=0){
+      return $db;
+    }
+    if($diff==1){
+      $level=2;
+    }else if($diff==2){
+      $level=3;
+    }
+    $getmaxrows="SELECT MAX(id) FROM ".$lang;
+    $runquery=mysql_query($getmaxrows);
+    $rand=array();
+    $tarr=array();
+    for($i=0;$i<$level;$i++){
+      $rows = mysql_result($runquery,0);
+      read:
+      $rand[$i]=randomize($rows,"r");
+      if($rand[$i]==$id){
+        goto read;
+      }
+      $t="SELECT translation FROM ".$lang." WHERE id='$rand[$i]'";
+      $query=mysql_query($t);
+      $tarr[$i]=mysql_result($query,0);
+    }
+    return $tarr;
+  }//test_generate
+
+
+//This function validates the answers
+//Input params: $user_id (user's primary key), $id(id of the word), $lang(word language), $diff = ($difficulty), $t (user's answer)
+  function test_validate($user_id,$id,$lang,$diff,$t){
+    $db=db_connect();
+    if($db!=0){
+      return $db;
+    }
+    $qstr="SELECT translation FROM ".$lang." WHERE id='$id'";
+    $query=mysql_query($qstr);
+    $result=mysql_result($query,0);
+    if($result==$t){
+      if($diff==1){
+        rep_adder($user_id,10);
+      }
+      if($diff==2){
+        rep_adder($user_id,15);
+      }
+      $str=mysql_query("UPDATE history SET flag=0 WHERE user_id='$user_id' AND word_id='$id' AND lang='$lang'");
+      return "Correct";
+    }
+    else{
+      return "Wrong";
+    }
+  }//test_validate
 
 
   /* ************************************
