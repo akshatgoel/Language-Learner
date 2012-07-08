@@ -11,6 +11,7 @@ require_once('../lib/library.php');
 				<?php echo show_mail_status($_SESSION['user']['id']); ?>
 			</a>
 		</p>
+		<p class="pb10"> My Reputation Points : <?php echo $_SESSION['user']['rep']; ?> <a href="javascript:void(0);" title="Take tests, Invite more friends to earn more reputation points!">?</a>	</p>
 		<p class="pb10" >Current Language : <?php echo ucwords($_SESSION['user']['user_language']); ?><br />
 					Default Language : <select id="change_default" style="float:none;"> 
 						<?php $langs = get_languages(); 

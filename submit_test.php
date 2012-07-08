@@ -1,9 +1,8 @@
 <?php
 session_start();
 header('Content-type: text/html;charset=utf-8');
-// Provides access to app specific values such as your app id and app secret.
-// Defined in 'AppInfo.php'
-
+if(!isset($_SESSION['user']['id']) || !isset($_POST))
+	header("Location: index.php");
 require_once('AppInfo.php');
 require_once('lib/library.php');
 // Enforce https on production
@@ -12,70 +11,18 @@ if (substr(AppInfo::getUrl(), 0, 8) != 'https://' && $_SERVER['REMOTE_ADDR'] != 
   exit();
 }
 
+$user_id = $_SESSION['user']['id'];
+$lang = $_SESSION['user']['user_language'];
+$diff = 1;
+
+foreach($_POST as $que=>$ans)
+	test_validate($user_id,$que,$lang,$diff,$ans);
+	
+test_give_beacon($user_id);
+unset($_POST);
 // This provides access to helper functions defined in 'utils.php'
 require_once('utils.php');
 
-
-/*****************************************************************************
- *
- * The content below provides examples of how to fetch Facebook data using the
- * Graph API and FQL.  It uses the helper functions defined in 'utils.php' to
- * do so.  You should change this section so that it prepares all of the
- * information that you want to display to the user.
- *
- ****************************************************************************/
-
-require_once('sdk/src/facebook.php');
-
-$facebook = new Facebook(array(
-  'appId'  => AppInfo::appID(),
-  'secret' => AppInfo::appSecret(),
-  'cookie' => true,
-  'fileUpload' => true,
-));
-//edit the permissions needed
-$permsneeded='publish_stream,user_photos,read_stream,email';
-
-$loginUrl = $facebook->getLoginUrl(array(
-				'scope' => $permsneeded,
-));
-$user_id = $facebook->getUser();
-
-if($user_id) {
-	try {
-		$me = $facebook->api('/me'); 
-		} catch(Exception $e) {
-			error_log($e);
-			echo "<script type='text/javascript'>window.top.location.href = '$loginUrl';</script>";	exit;
-	}
-}
-
-if ($me){
-	$fb_id = $facebook->getUser();
-	$access = $facebook->getAccesstoken();
-	$name = $me['name'];
-	$email = $me['email'];
-	if(($app_user = get_user($fb_id)) == -1){
-		$_SESSION['user']['id'] = add_user($fb_id, $access, $name, $email);
-		$_SESSION['user']['user_language'] = 'spanish';
-		added_user_beacon($_SESSION['user']['id']);
-	}
-	else{
-		update_user($fb_id, $access, $name, $email);
-		if(empty($_SESSION['user']['user_language'])){
-			$_SESSION['user'] = $app_user;
-			$_SESSION['user']['user_language'] = $app_user['default_language'];
-		}
-	}
-}
-else {			
-	echo "<script type='text/javascript'>window.top.location.href = '$loginUrl';</script>";	exit;
-}
-
-// Fetch the basic info of the app that they are using
-$app_info = $facebook->api('/'. AppInfo::appID());
-
-$app_name = idx($app_info, 'name', '');
 
 ?>
 <!DOCTYPE html>
@@ -218,25 +165,17 @@ $app_name = idx($app_info, 'name', '');
 					 
 			</div>
 			<div class="fr scroll-pane" id="right_content">
-				<?php for($i=0;$i<8;$i++){ ?>
-				<?php $today = word_of_day_lookup($_SESSION['user']['user_language'], $i); ?>
-				<div class="box">
-					<h3> <?php echo date('j F Y',strtotime($today['used'])); ?></h3>
+				
+				<div class="box" style="width:80%;">
+					<h3> Kudos!</h3>
 					<div>
-						<h4><?php echo $today['word']; ?></h4>
-						<em class="s13 mt7"><?php echo $today['translation']; ?></em>
-						<p class="s11 mt10"><a href="javascript:void(0);" title="<?php echo $today['lesson_name']; ?>" class="lesson_link"><?php echo $today['lesson_name']; ?></a><?php
-					switch(is_learnt($today['id'],$_SESSION['user']['user_language'], $_SESSION['user']['id'])){
-						case 1 : echo '<span class="unlearn_btn" id="word'.$today['id'].'">Unlearn';
-									break;
-						case 0 : 
-						default: echo '<span class="learn_btn" id="word'.$today['id'].'">Learn';
-									break;
-					}
-					?></span></p>
+						<h4>You have successfully taken the test. </h4>
+						<p >
+							Reputation points have been updated on your profile. 
+						</p>
 					</div>
 				</div>
-				<?php } ?>
+				
 			</div>
 		</div>
 	</body>

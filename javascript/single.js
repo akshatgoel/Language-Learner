@@ -141,5 +141,12 @@ $(document).ready(function(){
 					$('#overlay').hide();
 			});
 		}
+		
+		$('.options').live('change', function(){
+			var id = $(this).attr('title');
+			var id = $(this).attr('id');
+			$()
+		
+		});
 
 	});

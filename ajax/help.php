@@ -1,3 +1,9 @@
+<?php
+session_start();
+header('Content-type: text/html;charset=utf-8');
+require_once('../lib/library.php');
+view_help_beacon($_SESSION['user']['id']);
+?>
 <div class="box">
 <h3> Why can't I view the application correctly?</h3>
 <div>

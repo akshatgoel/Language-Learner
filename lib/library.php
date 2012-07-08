@@ -381,6 +381,16 @@
     return $new_rep;
   }//rep_adder
 
+//This function adds the rep points to user's account
+//Input params: $id (user's primary id), $points (number of rep points awarded)
+  function rep_update($id,$points){
+    $db=db_connect();
+    if($db!=0){
+      return $db;
+    }
+    $query=mysql_query("UPDATE users SET rep = rep + $points WHERE id='$id'");
+    return mysql_affected_rows();
+  }//rep_update
 
 //This function lists all the words that a user have learnt in a given language
 //Input Params: $id(User's primary id), $language (user's language)
@@ -432,7 +442,8 @@
     $query=mysql_query("SELECT word_id FROM history WHERE user_id='$id' AND lang='$lang' AND flag=0 ORDER BY rand() LIMIT 10");
     $words_num=mysql_num_rows($query);
     if($words_num<10){
-      return "You haven't learnt enough words to take a test in this language, learn more words or try other languages";
+      //return "You haven't learnt enough words to take a test in this language, learn more words or try other languages";
+      return -1;
     }
     $id_list=array();
     while($row=mysql_fetch_assoc($query)){
@@ -497,12 +508,12 @@
     $result=mysql_result($query,0);
     if($result==$t){
       if($diff==1){
-        rep_adder($user_id,10);
+        rep_update($user_id,10);
       }
       if($diff==2){
-        rep_adder($user_id,15);
+        rep_update($user_id,15);
       }
-      $str=mysql_query("UPDATE history SET flag=0 WHERE user_id='$user_id' AND word_id='$id' AND lang='$lang'");
+      $str=mysql_query("UPDATE history SET flag=1 WHERE user_id='$user_id' AND word_id='$id' AND lang='$lang'");
       return "Correct";
     }
     else{
@@ -562,5 +573,40 @@
 		$result = mysql_query($query);
 		return 1;
 	}
-	
+	function test_fail_beacon($user_id){
+		$db=db_connect();
+		if($db!=0){
+		  return $db;
+		}
+		$query = "insert into beacon(user_id, activity) values($user_id,'FailTest')";
+		$result = mysql_query($query);
+		return 1;
+	}
+	function test_view_beacon($user_id){
+		$db=db_connect();
+		if($db!=0){
+		  return $db;
+		}
+		$query = "insert into beacon(user_id, activity) values($user_id,'ViewTest')";
+		$result = mysql_query($query);
+		return 1;
+	}
+	function test_give_beacon($user_id){
+		$db=db_connect();
+		if($db!=0){
+		  return $db;
+		}
+		$query = "insert into beacon(user_id, activity) values($user_id,'GaveTest')";
+		$result = mysql_query($query);
+		return 1;
+	}
+	function view_help_beacon($user_id){
+		$db=db_connect();
+		if($db!=0){
+		  return $db;
+		}
+		$query = "insert into beacon(user_id, activity) values($user_id,'ViewHelp')";
+		$result = mysql_query($query);
+		return 1;
+	}
 ?>
