@@ -62,7 +62,7 @@ $(document).ready(function(){
 			btn.removeClass('learn_btn');
 			btn.addClass('unlearn_btn');
 			FB.api('/me/lang_learn:learn', 'post', 
-			{ word : 'https://furious-fog-7965.herokuapp.com/word.php?word='+word_id });
+			{ word : 'http://samples.ogp.me/362567140483629' });
 		});
 		$('.unlearn_btn').live('click',function(){
 			var word_id = $(this).attr('id').substring(4);
