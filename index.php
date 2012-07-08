@@ -211,7 +211,7 @@ $app_name = idx($app_info, 'name', '');
 					</li>
 					
 					<li>
-						<a href="javascript:void(0);" id="help_btn"><span class="link"> Help </span></a>
+						<a href="javascript:void(0);" title="help" class="ajax_link"><span class="link"> Help </span></a>
 					</li>
 				</ul>
 									
