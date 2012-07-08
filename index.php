@@ -101,6 +101,13 @@ $app_name = idx($app_info, 'name', '');
     <meta property="og:site_name" content="<?php echo he($app_name); ?>" />
     <meta property="og:description" content="My first app" />
     <meta property="fb:app_id" content="<?php echo AppInfo::appID(); ?>" />
+  <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# lang_learn: http://ogp.me/ns/fb/lang_learn#">
+  <meta property="fb:app_id" content="362249483848728" /> 
+  <meta property="og:type"   content="lang_learn:word" /> 
+  <meta property="og:url"    content="Put your own URL to the object here" /> 
+  <meta property="og:title"  content="Sample Word" /> 
+  <meta property="og:image"  content="https://s-static.ak.fbcdn.net/images/devsite/attachment_blank.png" /> 
+
 
     <script type="text/javascript" src="/javascript/jquery-1.7.1.min.js"></script>
 	
