@@ -129,7 +129,6 @@ $app_name = idx($app_info, 'name', '');
     <![endif]-->
   </head>
   
-		
   <body>
   <input type="hidden" value="<?php echo $_SESSION['user']['default_language']; ?>" id="user_def_lang">
     <div id="fb-root"></div>
